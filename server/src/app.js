@@ -11,6 +11,7 @@ const path = require('path')
 //   origin: 'http://localhost:3000' // allow only this client to acces our server
 // }))
 // app.use(morgan('combined'))
+//
 
 app.use(express.json()) // if we use json data
 // server public react code
