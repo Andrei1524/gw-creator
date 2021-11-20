@@ -1,18 +1,22 @@
 <template>
   <div class="header">
-    <b-navbar toggleable type="dark" variant="dark">
+    <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand href="#">NavBar</b-navbar-brand>
 
-      <b-navbar-toggle target="navbar-toggle-collapse">
-        <template>
-          <b-avatar variant="info" src="https://placekitten.com/300/300"></b-avatar>
-        </template>
-      </b-navbar-toggle>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-      <b-nav-item-dropdown text="User" right>
-        <b-dropdown-item href="#">Account</b-dropdown-item>
-        <b-dropdown-item href="#">Settings</b-dropdown-item>
-      </b-nav-item-dropdown>
+      <b-collapse id="nav-collapse" is-nav>
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown right no-caret>
+            <template #button-content>
+              <b-avatar variant="info" src="https://placekitten.com/300/300"></b-avatar>
+            </template>
+            <b-dropdown-item href="#">Profile</b-dropdown-item>
+            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
     </b-navbar>
   </div>
 </template>
