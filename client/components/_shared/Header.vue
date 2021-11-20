@@ -8,7 +8,7 @@
       <b-collapse id="nav-collapse" is-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown right no-caret>
+          <b-nav-item-dropdown class="header-" right no-caret no-flip>
             <template #button-content>
               <b-avatar variant="info" src="https://placekitten.com/300/300"></b-avatar>
             </template>
