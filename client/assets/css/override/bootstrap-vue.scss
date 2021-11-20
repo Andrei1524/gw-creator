@@ -1,0 +1,64 @@
+// CUSTOM BOOTSTRAP
+.custom-dropdown {
+  .dropdown-menu {
+    background: $black;
+    margin: 0;
+    border-radius: 0 0 0 5px;
+    padding: 0.5rem 5px;
+  }
+
+  .dropdown-item {
+    color: $light-gray;
+    padding: 0.25rem 1.5rem;
+    padding-left: 0.5rem;
+  }
+}
+
+// CUSTOM HEADER
+.custom-header {
+  .bg-info {
+    background-color: $black !important;
+  }
+
+  .navbar {
+    padding: 0;
+    padding-left: 1em;
+  }
+}
+
+// OVERRIDE BOOTSTRAP
+// REMOVE BOOTSTRAP FOCUS OUTLINE
+btn:focus, a:focus {
+  outline: none;
+}
+
+.navbar-toggler:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+
+// HEADER HOVER, DROPDOWN HOVER, NAVBAR
+.dropdown:hover, .dropdown-item:hover, .dropdown-item:focus {
+  background-color: $quarter-opacity-black-blue;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+  background-color: $quarter-opacity-black-blue;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: $light-gray;
+}
+
+.nav-item {
+  border-radius: 5px;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: $light-gray;
+  border-radius: 5px;
+}
+
+.special-nav-item {
+  background-color: $quarter-opacity-light-blue;
+}
