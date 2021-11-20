@@ -1,14 +1,4 @@
-// REMOVE BOOTSTRAP FOCUS OUTLINE
-btn:focus, a:focus
-{
-  outline: none;
-}
-.navbar-toggler:focus
-{
-  outline: none !important;
-  box-shadow: none;
-}
-
+// CUSTOM BOOTSTRAP
 .custom-dropdown {
   .dropdown-menu {
     background: $black;
@@ -19,10 +9,8 @@ btn:focus, a:focus
 
   .dropdown-item {
     color: $light-gray;
-  }
-
-  .dropdown-item:hover, .dropdown-item:focus {
-    background-color: $quarter-opacity-black-blue;
+    padding: 0.25rem 1.5rem;
+    padding-left: 0.5rem;
   }
 }
 
@@ -35,4 +23,19 @@ btn:focus, a:focus
   .navbar {
     padding: 0;
   }
+}
+
+// OVERRIDE BOOTSTRAP
+// REMOVE BOOTSTRAP FOCUS OUTLINE
+btn:focus, a:focus {
+  outline: none;
+}
+.navbar-toggler:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+
+// HEADER HOVER, DROPDOWN HOVER
+.dropdown:hover, .dropdown-item:hover, .dropdown-item:focus {
+  background-color: $quarter-opacity-black-blue;
 }

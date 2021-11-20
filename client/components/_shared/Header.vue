@@ -10,15 +10,27 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown class="custom-dropdown" right no-caret no-flip>
             <template #button-content>
-              <b-avatar variant="info" src="https://placekitten.com/300/300"></b-avatar>
+              <b-avatar src="https://placekitten.com/300/300"></b-avatar>
             </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Settings</b-dropdown-item>
+            <b-dropdown-item href="#"><b-icon icon="person-fill" aria-hidden="true"></b-icon> Profile</b-dropdown-item>
+            <b-dropdown-item href="#"><b-icon icon="gear-fill" aria-hidden="true"></b-icon> Settings</b-dropdown-item>
             <hr class="white-hr">
-            <b-dropdown-item href="#">Logout</b-dropdown-item>
+            <b-dropdown-item-button><b-icon icon="arrow-bar-left" aria-hidden="true"></b-icon> Logout</b-dropdown-item-button >
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {}
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+
+</style>
