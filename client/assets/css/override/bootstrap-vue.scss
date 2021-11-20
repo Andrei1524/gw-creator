@@ -1,3 +1,14 @@
+// REMOVE BOOTSTRAP FOCUS OUTLINE
+btn:focus, a:focus
+{
+  outline: none;
+}
+.navbar-toggler:focus
+{
+  outline: none !important;
+  box-shadow: none;
+}
+
 .custom-dropdown {
   .dropdown-menu {
     background: $black;
