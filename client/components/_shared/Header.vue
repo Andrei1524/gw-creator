@@ -8,7 +8,7 @@
       <b-collapse id="nav-collapse" is-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto d-flex align-items-center">
-          <b-nav-item href="#"><b-icon icon="gift" aria-hidden="true"></b-icon> Create</b-nav-item>
+          <b-nav-item href="#" class="special-nav-item"><b-icon icon="gift" aria-hidden="true"></b-icon> Create</b-nav-item>
           <b-nav-item href="#"><b-icon icon="menu-button-wide" aria-hidden="true"></b-icon> Dashboard</b-nav-item>
           <b-nav-item-dropdown class="custom-dropdown" right no-caret no-flip>
             <template #button-content>
