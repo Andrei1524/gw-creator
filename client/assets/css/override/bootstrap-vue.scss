@@ -1,0 +1,27 @@
+.custom-dropdown {
+  .dropdown-menu {
+    background: $black;
+    margin: 0;
+    border-radius: 0 0 0 5px;
+    padding: 0.5rem 5px;
+  }
+
+  .dropdown-item {
+    color: $light-gray;
+  }
+
+  .dropdown-item:hover, .dropdown-item:focus {
+    background-color: $quarter-opacity-black-blue;
+  }
+}
+
+// CUSTOM HEADER
+.custom-header {
+  .bg-info {
+    background-color: $black !important;
+  }
+
+  .navbar {
+    padding: 0;
+  }
+}
