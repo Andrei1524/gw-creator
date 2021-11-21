@@ -76,3 +76,31 @@ btn:focus, a:focus {
 }
 
 // REGISTER/LOGIN custom center container
+
+// CUSTOM FORMS
+.custom-form {
+  label {
+    color: $light-gray;
+  }
+
+  input {
+    border: none;
+    background: #1a1a1b61;
+    transition: .4s;
+    border-bottom: 2px solid rgba(208,187,143,.1803921568627451);
+  }
+
+  input::placeholder {
+    color: $quarter-opacity-white;
+    font-size: 14px;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: unset;
+    border-bottom: 2px solid #d0bb8f!important;
+    color: $light-gray !important;
+    box-shadow: none;
+    background: #1a1a1b61;
+  }
+}

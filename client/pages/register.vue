@@ -1,35 +1,31 @@
 <template>
-  <div class='register-page'>
-    <b-container class='mt-5'>
+  <div class="register-page">
+    <b-container class="mt-5">
       <b-row class="justify-content-md-center">
         <b-col col lg="4">
-          <b-form @submit='onSubmit' @reset='onReset' v-if='show'>
-            <b-form-group
-              id='input-group-1'
-              label='Email address:'
-              label-for='input-1'
-              description="We'll never share your email with anyone else."
-            >
-              <b-form-input
-                id='input-1'
-                v-model='form.email'
-                type='email'
-                placeholder='Enter email'
-                required
-              ></b-form-input>
-            </b-form-group>
+          <b-form
+            v-if="show"
+            class="custom-form"
+            @submit="onSubmit"
+            @reset="onReset"
+          >
+            <custom-input
+              :label="'Email:'"
+              :label-for="'email'"
+              :type="'email'"
+              :placeholder="'enter your email...'"
+              :required="true"
+            />
+            <custom-input
+              :label="'Password:'"
+              :label-for="'password'"
+              :type="'password'"
+              :placeholder="'enter your password...'"
+              :required="true"
+            />
 
-            <b-form-group id='input-group-2' label='Your Name:' label-for='input-2'>
-              <b-form-input
-                id='input-2'
-                v-model='form.name'
-                placeholder='Enter name'
-                required
-              ></b-form-input>
-            </b-form-group>
-
-            <b-button type='submit' variant='primary'>Submit</b-button>
-            <b-button type='reset' variant='danger'>Reset</b-button>
+            <b-button type="submit" variant="primary">Submit</b-button>
+            <b-button type="reset" variant="danger">Reset</b-button>
           </b-form>
         </b-col>
       </b-row>
@@ -38,33 +34,37 @@
 </template>
 
 <script>
+import customInput from '~/components/customFormElements/customInput'
+
 export default {
+  components: { customInput },
+
   data() {
     return {
       form: {
         email: '',
-        name: ''
+        name: '',
       },
-      show: true
+      show: true,
     }
   },
 
   methods: {
     onSubmit(event) {
-      event.preventDefault()
-      alert(JSON.stringify(this.form))
+      // event.preventDefault()
+      // alert(JSON.stringify(this.form))
     },
     onReset(event) {
-      event.preventDefault()
-      // Reset our form values
-      this.form.email = ''
-      this.form.name = ''
-      // Trick to reset/clear native browser form validation state
-      this.show = false
-      this.$nextTick(() => {
-        this.show = true
-      })
-    }
-  }
+      // event.preventDefault()
+      // // Reset our form values
+      // this.form.email = ''
+      // this.form.name = ''
+      // // Trick to reset/clear native browser form validation state
+      // this.show = false
+      // this.$nextTick(() => {
+      //   this.show = true
+      // })
+    },
+  },
 }
 </script>
