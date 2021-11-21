@@ -1,7 +1,7 @@
 <template>
   <div class='header custom-header'>
     <b-navbar toggleable='lg' type='dark' variant='info' :class="{'pr-3': !isLoggedIn}">
-      <b-navbar-brand href='#'>Giveaway Creator</b-navbar-brand>
+      <b-navbar-brand to='/'>Giveaway Creator</b-navbar-brand>
 
       <b-navbar-toggle target='nav-collapse'></b-navbar-toggle>
 
@@ -39,11 +39,11 @@
 
         <!--  NON AUTH NAV  -->
         <b-navbar-nav class='ml-auto d-flex align-items-center' v-else>
-          <b-nav-item href='#' class='special-nav-item'>
+          <b-nav-item to='/register' class='special-nav-item'>
             <b-icon icon='gift' aria-hidden='true'></b-icon>
             Register
           </b-nav-item>
-          <b-nav-item href='#'>
+          <b-nav-item to='/login'>
             <b-icon icon='menu-button-wide' aria-hidden='true'></b-icon>
             Login
           </b-nav-item>
