@@ -1,5 +1,13 @@
 // CUSTOM BOOTSTRAP
 .custom-dropdown {
+  .nav-link {
+    padding: 0 0.5rem !important;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .dropdown-menu {
     background: $black;
     margin: 0;
@@ -23,6 +31,10 @@
   .navbar {
     padding: 0;
     padding-left: 1em;
+  }
+
+  .navbar-brand {
+    padding: 0.75rem 0;
   }
 }
 

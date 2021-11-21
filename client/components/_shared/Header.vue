@@ -1,13 +1,14 @@
 <template>
   <div class='header custom-header'>
-    <b-navbar toggleable='lg' type='dark' variant='info'>
+    <b-navbar toggleable='lg' type='dark' variant='info' :class="{'pr-3': !isLoggedIn}">
       <b-navbar-brand href='#'>Giveaway Creator</b-navbar-brand>
 
       <b-navbar-toggle target='nav-collapse'></b-navbar-toggle>
 
       <b-collapse id='nav-collapse' is-nav>
         <!-- Right aligned nav items -->
-        <b-navbar-nav class='ml-auto d-flex align-items-center'>
+        <!--  AUTH NAV  -->
+        <b-navbar-nav class='ml-auto d-flex align-items-center' v-if='isLoggedIn'>
           <b-nav-item href='#' class='special-nav-item'>
             <b-icon icon='gift' aria-hidden='true'></b-icon>
             Create
@@ -35,15 +36,36 @@
             </b-dropdown-item-button>
           </b-nav-item-dropdown>
         </b-navbar-nav>
+
+        <!--  NON AUTH NAV  -->
+        <b-navbar-nav class='ml-auto d-flex align-items-center' v-else>
+          <b-nav-item href='#' class='special-nav-item'>
+            <b-icon icon='gift' aria-hidden='true'></b-icon>
+            Register
+          </b-nav-item>
+          <b-nav-item href='#'>
+            <b-icon icon='menu-button-wide' aria-hidden='true'></b-icon>
+            Login
+          </b-nav-item>
+        </b-navbar-nav>
       </b-collapse>
     </b-navbar>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {}
+  },
+
+  computed: {
+    ...mapGetters('modules/auth', [
+      'isLoggedIn',
+      'loggedInUser'
+    ])
   },
 
   mounted() {
@@ -58,12 +80,12 @@ export default {
 .nav-item {
   margin: 0 0.25em;
 
-  &:last-child {
-    margin: 0;
-  }
-
   .nav-link .b-icon.bi {
     color: $light-blue;
   }
+}
+
+.custom-dropdown {
+  margin: 0;
 }
 </style>
