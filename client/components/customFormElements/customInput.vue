@@ -3,11 +3,11 @@
     <b-form-input
       :id="labelFor"
       v-model="input_value"
-      :type="type"
       :placeholder="placeholder"
       :required="required"
       shadow-none
       :style="{color: highlight.color, borderBottom: highlight.borderBottom}"
+      aria-describedby="input-1-live-feedback"
       @change="colorChange"
     ></b-form-input>
   </b-form-group>
@@ -16,6 +16,12 @@
 <script>
 export default {
   props: {
+    name: {
+      type: String,
+      required: false,
+      default: ''
+    },
+
     label: {
       type: String,
       required: false,
@@ -43,6 +49,17 @@ export default {
       type: Boolean,
       required: false,
     },
+
+    defaultInputValue: {
+      type: String,
+      required: false,
+      default: ''
+    },
+
+    // validateState: {
+    //   type: Function,
+    //   required: false,
+    // },
   },
 
   data() {
@@ -53,6 +70,10 @@ export default {
       },
       input_value: '',
     }
+  },
+
+  created() {
+    this.input_value = this.defaultInputValue
   },
 
   methods: {
