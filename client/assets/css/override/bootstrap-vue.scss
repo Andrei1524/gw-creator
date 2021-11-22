@@ -104,3 +104,34 @@ btn:focus, a:focus {
     background: #1a1a1b61;
   }
 }
+
+// CUSTOM BTNS
+.custom-btn {
+  display: flex;
+  align-items: center;
+  background: $medium-green;
+  border: none;
+  transition: 0.3s;
+
+  svg {
+    margin-right: 5px;
+  }
+
+  &:focus {
+    outline: none !important;
+    border-color: unset;
+    box-shadow: none;
+  }
+}
+
+.btn-error {
+  background: #dc3545;
+
+  &:hover {
+    background: #dc3545;
+  }
+
+  &:focus {
+    background: #dc3545;
+  }
+}

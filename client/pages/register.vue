@@ -29,7 +29,21 @@
               :required="true"
             />
 
-            <b-button type="submit" variant="primary" @click='onSubmit'>Submit</b-button>
+            <b-button class='custom-btn' :class="{ 'btn-error': $v.$error }" type="submit" variant="primary" @click='onSubmit'>
+              <b-icon
+                icon="outlet"
+                aria-hidden="true"
+                style="width: 30px; height: 30px;"
+                v-if='$v.$error'
+              ></b-icon>
+              <b-icon
+                icon="person-plus-fill"
+                aria-hidden="true"
+                style="width: 30px; height: 30px;"
+                v-else
+              ></b-icon>
+              Register
+            </b-button>
           </b-form>
         </b-col>
       </b-row>
