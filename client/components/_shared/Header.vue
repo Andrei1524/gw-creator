@@ -73,7 +73,8 @@ export default {
     ...mapGetters('modules/auth', ['isLoggedIn', 'loggedInUser']),
   },
 
-  mounted() {},
+  mounted() {
+  },
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <b-form-group id="input-group" :label="label" :label-for="labelFor">
+  <b-form-group id="input-group" :label="label" :label-for="labelFor" :class="{ 'has-error': v.$error }">
     <b-form-input
       :id="labelFor"
       v-model="input_value"
@@ -7,9 +7,16 @@
       :required="required"
       shadow-none
       :style="{color: highlight.color, borderBottom: highlight.borderBottom}"
-      aria-describedby="input-1-live-feedback"
+      :state="v.$dirty ? !v.$error : null"
+      aria-describedby="input-live-feedback"
+      @input="v.$touch()"
       @change="colorChange"
     ></b-form-input>
+
+    <b-form-invalid-feedback id="input-live-feedback">
+      <span v-if='name ==="email" && v.$error'>enter a valid email</span>
+      <span v-if='name ==="username" && v.$error'>username must be at least 3 characters</span>
+    </b-form-invalid-feedback>
   </b-form-group>
 </template>
 
@@ -50,16 +57,15 @@ export default {
       required: false,
     },
 
-    defaultInputValue: {
+    value: {
       type: String,
-      required: false,
-      default: ''
+      default: ""
     },
 
-    // validateState: {
-    //   type: Function,
-    //   required: false,
-    // },
+    v: {
+      type: Object,
+      required: true
+    }
   },
 
   data() {
@@ -68,21 +74,23 @@ export default {
         color: '#ffffff73',
         borderBottom: '2px solid #d0bb8f2e',
       },
-      input_value: '',
     }
   },
 
-  created() {
-    this.input_value = this.defaultInputValue
+  computed: {
+    input_value: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit("input", value);
+      }
+    }
   },
 
   methods: {
     colorChange() {
       this.highlight = this.input_value.length > 0 ? {color: '#FFF', borderBottom: '2px solid #D0BB8F'} : {color: '#ffffff73', borderBottom: '2px solid #d0bb8f2e'}
-      this.$emit('emit_input', {
-        data: this.input_value,
-        input_name: this.name
-      })
     }
   }
 }
@@ -90,4 +98,11 @@ export default {
 
 <style lang="scss" scoped>
 @import 'assets/css/variables';
+
+.has-error {
+  color: red;
+  input {
+    border-bottom: 2px solid #dc3545 !important;
+  }
+}
 </style>

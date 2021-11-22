@@ -12,8 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^6.4.0",
-    "vuelidate": "^0.7.6"
+    "concurrently": "^6.4.0"
   },
   "devDependencies": {
     "fibers": "^5.0.0",
