@@ -1,3 +1,8 @@
+// HEADERS
+h1 {
+  color: $white;
+}
+
 // CUSTOM BOOTSTRAP
 .custom-dropdown {
   .nav-link {
@@ -109,7 +114,7 @@ btn:focus, a:focus {
 .custom-btn {
   display: flex;
   align-items: center;
-  background: $medium-green;
+  background: $quarter-opacity-light-blue;
   border: none;
   transition: 0.3s;
 
