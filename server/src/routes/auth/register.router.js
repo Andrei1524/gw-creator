@@ -4,6 +4,6 @@ const registerRouter = express.Router()
 // controllers
 const { httpRegister } = require('./register.controller')
 
-registerRouter.get('/', httpRegister)
+registerRouter.post('/', httpRegister)
 
 module.exports = registerRouter

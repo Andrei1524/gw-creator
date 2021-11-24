@@ -1,7 +1,10 @@
-// const {getAllPlanets} = require('../../models/planets.model')
+const { registerUser } = require('../../models/user.model')
 
 async function httpRegister(req, res) {
-  return res.send('hit register route')
+  const user = req.body
+  const registeredUser = await registerUser(user)
+
+  return res.status(200).json(registeredUser)
 }
 
 module.exports = {

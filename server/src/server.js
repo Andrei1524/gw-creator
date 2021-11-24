@@ -30,4 +30,3 @@ async function startServer() { // putem folosi asta oricand avem nevoie sa facem
 }
 
 startServer()
-// app.listen()
