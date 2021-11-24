@@ -108,6 +108,7 @@ export default {
       if (this.$v.form.$pending || this.$v.form.$error) return;
       // to form submit after this
       const params = { ...this.form }
+      this.$axios.get('http://localhost:3000/test').then((data) => console.log(data))
       console.log(params)
     },
   },

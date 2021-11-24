@@ -1,22 +1,32 @@
 const http = require('http')
+const io = require('socket.io')
 
-// require('dotenv').config()
+require('dotenv').config()
 
-const app = require('./app')
+const appServer = require('./app')
+const { mongoConnect } = require('./services/mongo')
+
+const httpServer = http.createServer(appServer)
+const socketServer = io(httpServer, {
+  cors: {
+    origin: '*'
+  }
+})
+
+const sockets = require('./sockets')
 
 const PORT = process.env.PORT || 3000
 
-const server = http.createServer(app)
-
 async function startServer() { // putem folosi asta oricand avem nevoie sa facem ceva task inainte sa porneasca serverul
   // wait for data then server start listening
-  // await mongoConnect()
+  await mongoConnect()
   // await loadPlanetsData()
   // await loadLaunchesData()
 
-  server.listen(PORT, () => {
-    console.log('listening on port, ', PORT)
+  httpServer.listen(PORT, () => {
+    console.log('server listening on port, ', PORT)
   })
+  sockets.listen(socketServer)
 }
 
 startServer()
