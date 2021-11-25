@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { required, minLength } from "vuelidate/lib/validators";
 import customInput from '~/components/customFormElements/customInput'
 
@@ -85,14 +86,19 @@ export default {
   },
 
   methods: {
-    onSubmit(event) {
+    ...mapActions({
+      login: 'modules/auth/login'
+    }),
+
+    async onSubmit(event) {
       event.preventDefault()
       this.$v.form.$touch();
       // if its still pending or an error is returned do not submit
       if (this.$v.form.$pending || this.$v.form.$error) return;
       // to form submit after this
       const params = { ...this.form }
-      console.log(params)
+
+      await this.login(params)
     },
   },
 }
