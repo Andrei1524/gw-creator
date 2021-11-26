@@ -1,13 +1,14 @@
+import { showAlert } from '~/utils/showAlert'
+
 export const actions = {
   async login({ commit }, payload) {
     try {
       await this.$auth.loginWith('local', { data: payload })
       await this.$router.replace('/')
+
+      showAlert(commit, 'Success!', 'success')
     } catch (err) {
-      commit('modules/alert/setShowDismissibleAlert', {
-        value: true,
-        message: err
-      }, {root: true})
+      showAlert(commit, err, 'warning')
     }
   }
 }

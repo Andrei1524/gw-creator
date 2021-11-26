@@ -6,10 +6,10 @@
       fade
       @dismissed="dismissCountDown=0"
       @dismiss-count-down="countDownChanged"
-      variant="danger"
+      :variant="variant"
       dismissible
     >
-      Dismissible Alert!
+      {{ alertMessage }}
     </b-alert>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
   },
 
   computed: {
-    ...mapState('modules/alert', ['showDismissibleAlert']),
+    ...mapState('modules/alert', ['showDismissibleAlert', 'alertMessage', 'variant']),
   },
 
   watch: {
@@ -46,10 +46,7 @@ export default {
 
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
-      this.setShowDismissibleAlert({
-        value: false,
-        message: ''
-      })
+      this.setShowDismissibleAlert(false)
     },
 
     showAlert() {
