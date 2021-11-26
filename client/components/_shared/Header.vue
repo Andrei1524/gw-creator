@@ -4,7 +4,7 @@
       toggleable="lg"
       type="dark"
       variant="info"
-      :class="{ 'pr-3': !isLoggedIn }"
+      :class="{ 'pr-3': !$auth.loggedIn }"
     >
       <b-navbar-brand to="/">Giveaway Creator</b-navbar-brand>
 
@@ -14,7 +14,7 @@
         <!-- Right aligned nav items -->
         <!--  AUTH NAV  -->
         <b-navbar-nav
-          v-if="isLoggedIn"
+          v-if="$auth.loggedIn"
           class="ml-auto d-flex align-items-center"
         >
           <b-nav-item href="#" class="special-nav-item">
@@ -62,15 +62,9 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   data() {
     return {}
-  },
-
-  computed: {
-    ...mapGetters('modules/auth', ['isLoggedIn', 'loggedInUser']),
   },
 
   mounted() {

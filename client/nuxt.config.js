@@ -59,10 +59,20 @@ export default {
   auth: {
     strategies: {
       local: {
+        token: {
+          property: 'token',
+          global: true,
+          // required: true,
+          // type: 'Bearer'
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
         endpoints: {
-          login: { url: 'login', method: 'post', propertyName: 'data.token' },
-          user: { url: 'me', method: 'get', propertyName: 'data' },
-          logout: false
+          login: { url: '/login', method: 'post' },
+          logout: { url: '/logout', method: 'post' },
+          user: { url: '/user', method: 'get' }
         }
       }
     }

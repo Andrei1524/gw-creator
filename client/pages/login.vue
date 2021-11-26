@@ -96,8 +96,9 @@ export default {
       // if its still pending or an error is returned do not submit
       if (this.$v.form.$pending || this.$v.form.$error) return;
       // to form submit after this
-      const params = { ...this.form }
+      // const params = { ...this.form }
 
+      const params = { ...this.form }
       await this.login(params)
     },
   },
