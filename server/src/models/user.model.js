@@ -1,15 +1,21 @@
 const User = require('./user.mongo')
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
 
 async function registerUser(user) {
   try {
+    const saltRounds = 11
+    const password = user.password
+    const hashedPassword = await bcrypt.hash(password, saltRounds)
+
     const newUser = new User({
       username: user.username,
       email: user.email,
-      password: user.password
+      password: hashedPassword
     })
 
-    return await newUser.save()
+    await newUser.save()
+
   } catch (err) {
     console.error(`Could not register user: ${err}`)
   }
@@ -18,12 +24,14 @@ async function registerUser(user) {
 async function loginUser(loginData) {
   try {
     const {username, password} = loginData
-    // Filter user from the users array by username and password
-    const user = await User.findOne({username, password}).exec()
-    if (user) {
+    const user = await User.findOne({ username }).exec()
+
+    const passwordsMatch = await bcrypt.compare(password, user.password);
+
+    if(user && passwordsMatch) {
       return jwt.sign({ username: user.username }, process.env.JWT_SECRET)
     } else {
-      return null
+      return false
     }
   } catch (err) {
     throw new Error(`Could not register user: ${err}`)

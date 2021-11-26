@@ -16,8 +16,13 @@ const authenticateJWT = async (req, res, next) => {
       // assign current user details to the req
       req.user = await User.findOne({ username: user.username }).lean().exec()
       _.unset(req.user, 'password')
+      console.log(req.user)
 
-      next();
+      if (req.user) {
+        next();
+      } else {
+        return res.sendStatus(403)
+      }
     });
   } else {
     res.sendStatus(401);
