@@ -1,12 +1,8 @@
-export const state = () => ({
-})
-
 export const actions = {
   async login({ commit }, payload) {
     try {
-      const response = await this.$auth.loginWith('local', { data: this.form })
-
-      commit('setAccessToken', response.data.access_token)
+      await this.$auth.loginWith('local', { data: payload })
+      await this.$router.replace('/')
     } catch (err) {
       commit('modules/alert/setShowDismissibleAlert', {
         value: true,

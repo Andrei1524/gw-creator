@@ -60,19 +60,18 @@ export default {
     strategies: {
       local: {
         token: {
-          property: 'token',
+          property: 'access_token',
           global: true,
-          // required: true,
-          // type: 'Bearer'
-        },
-        user: {
-          property: 'user',
-          // autoFetch: true
+          required: true,
+          type: "Bearer",
+          headers: {
+            Referer: "http://localhost:3000/" // <- here
+          }
         },
         endpoints: {
-          login: { url: '/login', method: 'post' },
+          login: { url: '/login', method: 'post'},
           logout: { url: '/logout', method: 'post' },
-          user: { url: '/user', method: 'get' }
+          user: false
         }
       }
     }

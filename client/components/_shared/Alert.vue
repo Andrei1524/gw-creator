@@ -1,31 +1,65 @@
 <template>
-  <div class='custom-alert'>
-    <b-alert ref='alert' v-model='showDismissibleAlert' variant='danger' dismissible>
+  <div class="custom-alert">
+    <b-alert
+      ref="alert"
+      :show="dismissCountDown"
+      fade
+      @dismissed="dismissCountDown=0"
+      @dismiss-count-down="countDownChanged"
+      variant="danger"
+      dismissible
+    >
       Dismissible Alert!
     </b-alert>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   data() {
-    return {}
+    return {
+      dismissSecs: 5,
+      dismissCountDown: 0
+    }
   },
 
   computed: {
-    ...mapState('modules/alert', [
-      'showDismissibleAlert'
-    ])
+    ...mapState('modules/alert', ['showDismissibleAlert']),
   },
 
-  mounted() {
+  watch: {
+    showDismissibleAlert() {
+      if (this.showDismissibleAlert) {
+        this.showAlert()
+      }
+    }
+  },
+
+  mounted() {},
+
+  methods: {
+    ...mapMutations('modules/alert', [
+      'setShowDismissibleAlert'
+    ]),
+
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+      this.setShowDismissibleAlert({
+        value: false,
+        message: ''
+      })
+    },
+
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs
+    }
   }
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @import './assets/css/variables';
 
 .custom-alert {
