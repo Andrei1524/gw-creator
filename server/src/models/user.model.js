@@ -4,6 +4,14 @@ const bcrypt = require('bcrypt')
 
 async function registerUser(user) {
   try {
+    // find if username is already in use
+    const foundUserByUsername = await User.findOne({username: user.username}).lean().exec()
+    const foundUserByEmail = await User.findOne({email: user.email}).lean().exec()
+
+    if (foundUserByUsername || foundUserByEmail) {
+      throw Error('A user with these credentials already exists')
+    }
+
     const saltRounds = 11
     const password = user.password
     const hashedPassword = await bcrypt.hash(password, saltRounds)
@@ -17,7 +25,7 @@ async function registerUser(user) {
     await newUser.save()
 
   } catch (err) {
-    console.error(`Could not register user: ${err}`)
+    throw Error(err)
   }
 }
 
@@ -26,15 +34,19 @@ async function loginUser(loginData) {
     const {username, password} = loginData
     const user = await User.findOne({ username }).exec()
 
+    if (!user) {
+      throw Error('username and password combination is invalid')
+    }
+
     const passwordsMatch = await bcrypt.compare(password, user.password);
 
-    if(user && passwordsMatch) {
+    if(passwordsMatch) {
       return jwt.sign({ username: user.username }, process.env.JWT_SECRET)
     } else {
-      return false
+      throw Error('username and password combination is invalid')
     }
   } catch (err) {
-    throw new Error(`Could not register user: ${err}`)
+    throw Error(err)
   }
 }
 
