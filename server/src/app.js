@@ -8,7 +8,7 @@ const morgan = require('morgan')
 const api = require('./routes/api')
 
 app.use(cors({
-  origin: 'http://localhost:8000' // allow only this client to acces our server
+  origin: ['http://localhost:8000', 'https://pacific-wave-83469.herokuapp.com'] // allow only this client to acces our server
 }))
 
 if (process.env.NODE_ENV === 'production') {
