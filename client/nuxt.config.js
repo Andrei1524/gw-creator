@@ -53,7 +53,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: `${process.env.SERVER_API}/v1`
+    baseURL: `${process.env.BASE_URL}/v1`
   },
 
   auth: {
@@ -65,7 +65,7 @@ export default {
           required: true,
           type: "Bearer",
           headers: {
-            Referer: process.env.SERVER_API // <- here
+            Referer: process.env.BASE_URL // <- here
           }
         },
         endpoints: {
@@ -79,6 +79,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  publicRuntimeConfig: {
+    baseURL: process.env.BASE_URL
   },
 
   server: {
