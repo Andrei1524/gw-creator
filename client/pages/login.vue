@@ -59,6 +59,8 @@ import { required, minLength } from "vuelidate/lib/validators";
 import customInput from '~/components/customFormElements/customInput'
 
 export default {
+  name: 'LoginView',
+  middleware: 'guest',
   components: { customInput },
 
   data() {
