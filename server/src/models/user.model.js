@@ -16,7 +16,8 @@ async function registerUser(user) {
     const password = user.password
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-    const refresh_token = jwt.sign({username: user.username}, process.env.JWT_REFRESH_TOKEN_SECRET)
+    // const refresh_token = jwt.sign({username: user.username}, process.env.JWT_REFRESH_TOKEN_SECRET)
+    const refresh_token = null
 
     const newUser = new User({
       username: user.username,
