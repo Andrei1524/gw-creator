@@ -11,6 +11,7 @@
     "server": "npm run watch --prefix server",
     "client": "npm run dev --prefix client",
     "deploy": "npm run build-prod --prefix client && npm start --prefix server",
+    "deploy-dev": "npm run build-dev --prefix client && npm start --prefix server",
     "watch": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
