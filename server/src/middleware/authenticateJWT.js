@@ -8,7 +8,7 @@ const authenticateJWT = async (req, res, next) => {
   if (authHeader) {
     const token = authHeader.split(' ')[1];
 
-    jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+    jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET, async (err, user) => {
       if (err) {
         return res.sendStatus(403);
       }
@@ -16,7 +16,6 @@ const authenticateJWT = async (req, res, next) => {
       // assign current user details to the req
       req.user = await User.findOne({ username: user.username }).lean().exec()
       _.unset(req.user, 'password')
-      console.log(req.user)
 
       if (req.user) {
         next();
