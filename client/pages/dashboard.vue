@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   middleware: 'auth',
 
@@ -12,8 +14,14 @@ export default {
     return {}
   },
 
-  methods: {
+  async mounted() {
+    await this.getDashboard()
+  },
 
+  methods: {
+    ...mapActions({
+      getDashboard: 'modules/dashboard/getDashboard'
+    })
   }
 }
 </script>

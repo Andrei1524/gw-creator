@@ -64,9 +64,8 @@ export default {
         scheme: 'refresh',
         token: {
           property: 'access_token',
-          maxAge: 120,
+          maxAge: 1800,
           global: true,
-          required: true,
           type: "Bearer",
           headers: {
             Referer: process.env.BASE_URL // <- here

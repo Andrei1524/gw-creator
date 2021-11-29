@@ -2,6 +2,8 @@ const User = require('./user.mongo')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 
+const { createAccessToken, createRefreshToken } = require('../services/jwt')
+
 async function registerUser(user) {
   try {
     // find if username is already in use
@@ -45,8 +47,8 @@ async function loginUser(loginData) {
     const passwordsMatch = await bcrypt.compare(password, user.password);
 
     if(passwordsMatch) {
-      const refresh_token = jwt.sign({username: user.username}, process.env.JWT_REFRESH_TOKEN_SECRET, {expiresIn: 60 * 60 * 24 * 30})
-      const access_token = jwt.sign({ username: user.username }, process.env.JWT_ACCESS_TOKEN_SECRET, {expiresIn: '120s'})
+      const refresh_token = createRefreshToken(user)
+      const access_token = createAccessToken(user)
       user.refreshToken = refresh_token
       user.save()
       return {
@@ -76,7 +78,7 @@ async function refreshToken(req, res) {
 
     return jwt.verify(refresh_token, process.env.JWT_REFRESH_TOKEN_SECRET, async (err, user) => {
       if (err) throw Error(err)
-      return jwt.sign({ username: foundUserByRefreshToken.username }, process.env.JWT_ACCESS_TOKEN_SECRET, { expiresIn: '120s' })
+      return createAccessToken(foundUserByRefreshToken)
     })
 
   } catch (err) {
