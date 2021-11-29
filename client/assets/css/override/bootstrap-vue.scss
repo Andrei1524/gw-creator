@@ -1,5 +1,18 @@
+// HEADERS
+h1 {
+  color: $white;
+}
+
 // CUSTOM BOOTSTRAP
 .custom-dropdown {
+  .nav-link {
+    padding: 0 0.5rem !important;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .dropdown-menu {
     background: $black;
     margin: 0;
@@ -23,6 +36,10 @@
   .navbar {
     padding: 0;
     padding-left: 1em;
+  }
+
+  .navbar-brand {
+    padding: 0.75rem 0;
   }
 }
 
@@ -61,4 +78,65 @@ btn:focus, a:focus {
 
 .special-nav-item {
   background-color: $quarter-opacity-light-blue;
+}
+
+// REGISTER/LOGIN custom center container
+
+// CUSTOM FORMS
+.custom-form {
+  label {
+    color: $light-gray;
+  }
+
+  input {
+    border: none;
+    background: #1a1a1b61;
+    transition: border .4s;
+    border-bottom: 2px solid rgba(208,187,143,.1803921568627451);
+  }
+
+  input::placeholder {
+    color: $quarter-opacity-white;
+    font-size: 14px;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: unset;
+    border-bottom: 2px solid #d0bb8f!important;
+    color: $light-gray !important;
+    box-shadow: none;
+    background: #1a1a1b61;
+  }
+}
+
+// CUSTOM BTNS
+.custom-btn {
+  display: flex;
+  align-items: center;
+  background: $quarter-opacity-light-blue;
+  border: none;
+  transition: 0.3s;
+
+  svg {
+    margin-right: 5px;
+  }
+
+  &:focus {
+    outline: none !important;
+    border-color: unset;
+    box-shadow: none;
+  }
+}
+
+.btn-error {
+  background: #dc3545;
+
+  &:hover {
+    background: #dc3545;
+  }
+
+  &:focus {
+    background: #dc3545;
+  }
 }
