@@ -32,6 +32,7 @@
             />
 
             <b-button class='custom-btn' :class="{ 'btn-error': $v.$error }" type="submit" variant="primary" @click='onSubmit'>
+              <b-spinner v-show='loading' small type="grow"></b-spinner>
               <b-icon
                 v-if='$v.$error'
                 icon="outlet"
@@ -69,6 +70,8 @@ export default {
         username: '',
         password: ''
       },
+
+      loading: false,
       show: true,
     }
   },
@@ -97,11 +100,11 @@ export default {
       this.$v.form.$touch();
       // if its still pending or an error is returned do not submit
       if (this.$v.form.$pending || this.$v.form.$error) return;
-      // to form submit after this
-      // const params = { ...this.form }
+      this.loading = true
 
       const params = { ...this.form }
       await this.login(params)
+      this.loading = false
     },
   },
 }
