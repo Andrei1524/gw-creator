@@ -21,7 +21,7 @@
             <b-icon icon="gift" aria-hidden="true"></b-icon>
             Create
           </b-nav-item>
-          <b-nav-item href="#">
+          <b-nav-item to='/dashboard'>
             <b-icon icon="menu-button-wide" aria-hidden="true"></b-icon>
             Dashboard
           </b-nav-item>

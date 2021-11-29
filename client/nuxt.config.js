@@ -79,7 +79,7 @@ export default {
         },
         endpoints: {
           login: { url: '/auth/login', method: 'post'},
-          refresh: { url: '/api/auth/refresh_token', method: 'post' },
+          refresh: { url: '/auth/refresh_token', method: 'post' },
           logout: { url: '/auth/logout', method: 'post' },
           user: false
         }
