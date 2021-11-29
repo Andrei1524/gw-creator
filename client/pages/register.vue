@@ -43,6 +43,7 @@
             />
 
             <b-button class='custom-btn' :class="{ 'btn-error': $v.$error }" type="submit" variant="primary" @click='onSubmit'>
+              <b-spinner v-show='loading' small type="grow"></b-spinner>
               <b-icon
                 v-if='$v.$error'
                 icon="outlet"
@@ -65,7 +66,8 @@
 </template>
 
 <script>
-import { email, required, minLength } from "vuelidate/lib/validators";
+import { mapActions } from 'vuex'
+import { email, required, minLength } from "vuelidate/lib/validators"
 import customInput from '~/components/customFormElements/customInput'
 
 export default {
@@ -80,7 +82,9 @@ export default {
         username: '',
         password: ''
       },
+
       show: true,
+      loading: false
     }
   },
 
@@ -103,15 +107,19 @@ export default {
   },
 
   methods: {
-    onSubmit(event) {
+    ...mapActions({
+      register: 'modules/auth/register'
+    }),
+
+    async onSubmit(event) {
       event.preventDefault()
       this.$v.form.$touch();
       // if its still pending or an error is returned do not submit
       if (this.$v.form.$pending || this.$v.form.$error) return;
-      // to form submit after this
+      this.loading = true
       const params = { ...this.form }
-      this.$axios.get('http://localhost:3000/test').then((data) => console.log(data))
-      console.log(params)
+      await this.register(params)
+      this.loading = false
     },
   },
 }
