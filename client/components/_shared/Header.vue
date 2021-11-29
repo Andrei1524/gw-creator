@@ -38,7 +38,7 @@
               Settings
             </b-dropdown-item>
             <hr class="white-hr" />
-            <b-dropdown-item-button>
+            <b-dropdown-item-button @click='logout'>
               <b-icon icon="arrow-bar-left" aria-hidden="true"></b-icon>
               Logout
             </b-dropdown-item-button>
@@ -67,7 +67,14 @@ export default {
     return {}
   },
 
-  mounted() {
+  methods: {
+    async logout() {
+      await this.$auth.logout({
+        data: {
+          refresh_token: this.$auth.strategy.refreshToken.get()
+        }
+      })
+    }
   },
 }
 </script>

@@ -31,8 +31,7 @@ async function httpRefreshToken(req, res) {
 
 async function httpLogout(req, res) {
   try {
-    const response = await logout(req, res)
-    console.log(response)
+    await logout(req, res)
     return res.sendStatus(204)
   } catch (err) {
     return res.status(401).json({error: err.message})
