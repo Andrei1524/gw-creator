@@ -61,8 +61,10 @@ export default {
   auth: {
     strategies: {
       local: {
+        scheme: 'refresh',
         token: {
           property: 'access_token',
+          maxAge: 120,
           global: true,
           required: true,
           type: "Bearer",
@@ -70,9 +72,15 @@ export default {
             Referer: process.env.BASE_URL // <- here
           }
         },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30
+        },
         endpoints: {
-          login: { url: '/login', method: 'post'},
-          logout: { url: '/logout', method: 'post' },
+          login: { url: '/auth/login', method: 'post'},
+          refresh: { url: '/api/auth/refresh_token', method: 'post' },
+          logout: { url: '/auth/logout', method: 'post' },
           user: false
         }
       }

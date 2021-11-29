@@ -19,7 +19,7 @@ async function registerUser(user) {
     // const refresh_token = jwt.sign({username: user.username}, process.env.JWT_REFRESH_TOKEN_SECRET)
     const refresh_token = null
 
-    const newUser = new User({
+    const newUser = await new User({
       username: user.username,
       email: user.email,
       password: hashedPassword,
@@ -45,8 +45,8 @@ async function loginUser(loginData) {
     const passwordsMatch = await bcrypt.compare(password, user.password);
 
     if(passwordsMatch) {
-      const refresh_token = jwt.sign({username: user.username}, process.env.JWT_REFRESH_TOKEN_SECRET)
-      const access_token = jwt.sign({ username: user.username }, process.env.JWT_ACCESS_TOKEN_SECRET, {expiresIn: '60s'})
+      const refresh_token = jwt.sign({username: user.username}, process.env.JWT_REFRESH_TOKEN_SECRET, {expiresIn: 60 * 60 * 24 * 30})
+      const access_token = jwt.sign({ username: user.username }, process.env.JWT_ACCESS_TOKEN_SECRET, {expiresIn: '120s'})
       user.refreshToken = refresh_token
       user.save()
       return {
@@ -76,7 +76,7 @@ async function refreshToken(req, res) {
 
     return jwt.verify(refresh_token, process.env.JWT_REFRESH_TOKEN_SECRET, async (err, user) => {
       if (err) throw Error(err)
-      return jwt.sign({ username: foundUserByRefreshToken.username }, process.env.JWT_ACCESS_TOKEN_SECRET, { expiresIn: '60s' })
+      return jwt.sign({ username: foundUserByRefreshToken.username }, process.env.JWT_ACCESS_TOKEN_SECRET, { expiresIn: '120s' })
     })
 
   } catch (err) {

@@ -4,7 +4,6 @@ const authRouter = express.Router()
 // controllers
 const { httpLogin, httpRegister, httpRefreshToken, httpLogout } = require('./auth.controller')
 
-
 authRouter.post('/login', httpLogin)
 authRouter.post('/register', httpRegister)
 authRouter.post('/refresh_token', httpRefreshToken)
