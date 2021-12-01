@@ -3,13 +3,15 @@
     <Alert />
     <Header />
     <main>
-      <div class="2columns container">
-        <div class="first-col">
-          <Nuxt />
-        </div>
-        <div class="second-col">
-          <ShareGiveaway v-if='componentToShow === "share-giveaway"' />
-        </div>
+      <div class='container mt-4'>
+        <b-row align-h="between">
+          <b-col cols="12" md="6">
+            <Nuxt />
+          </b-col>
+          <b-col cols="12" md="4" align-h="center">
+            <ShareGiveaway v-if="componentToShow === 'share-giveaway'" />
+          </b-col>
+        </b-row>
       </div>
     </main>
   </div>
@@ -26,7 +28,7 @@ export default {
   components: { Header, Alert, ShareGiveaway },
 
   computed: {
-    ...mapState(['componentToShow'])
+    ...mapState(['componentToShow']),
   },
 
   data() {

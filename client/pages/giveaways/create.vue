@@ -1,5 +1,5 @@
 <template>
-  <div class="create-page mt-4">
+  <div class="create-page">
     <div>
       <h4>Type: <span class="font-weight-light">normal giveaway</span></h4>
 
