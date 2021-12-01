@@ -34,15 +34,56 @@
               :default_option='form.gw_type'
               :title="'giveaway type:'"
               :name="'gw_type'"
-              @choose_option="chooseOption"
               :option1="'fast'"
               :option2="'normal'"
+              @choose_option="chooseOption"
             />
             <div class="info-box">
               <h5>* fast: giveaway duration is between 10 min. and 24 hours</h5>
               <h5>
                 * normal: you can schedule your giveaway duration between dates
               </h5>
+            </div>
+
+            <!-- PICK WINNER METHOD MANUAL/AUTOMATIC -->
+            <customOptionPicker
+              v-model='form.pick_winner_method'
+              :default_option='form.pick_winner_method'
+              :title="'pick winner method:'"
+              :name="'pick_winner_method'"
+              :option1="'automatic'"
+              :option2="'manual'"
+              @choose_option="chooseOption"
+            />
+            <div class="info-box">
+              <h5>* manual: draw winners manually whenever you want (randomly)</h5>
+              <h5>
+                * automatic: the winners will draw automatic when the time will run
+                out (randomly)
+              </h5>
+            </div>
+
+            <div class='d-flex justify-content-between'>
+              <custom-input
+                v-model='form.nr_of_participants'
+                :name="'nr_of_participants'"
+                :label="'nr. of participants:'"
+                :label-for="'nr_of_participants'"
+                :type="'number'"
+                :placeholder="'enter nr. of participants'"
+                :v="$v.form.nr_of_participants"
+                :required="true"
+              />
+              <custom-input
+                v-model='form.nr_of_winners'
+                :name="'nr_of_winners'"
+                :label="'nr. of winners:'"
+                :label-for="'nr_of_winners'"
+                :type="'number'"
+                :placeholder="'enter a nr. of winners'"
+                :v="$v.form.nr_of_winners"
+                :required="true"
+              />
             </div>
           </b-form>
         </b-col>
@@ -53,7 +94,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { minLength, required } from 'vuelidate/lib/validators'
+import { minLength, required, integer } from 'vuelidate/lib/validators'
 import customInput from '~/components/customFormElements/customInput'
 import customTextarea from '~/components/customFormElements/customTextarea'
 
@@ -68,7 +109,9 @@ export default {
       form: {
         giveawayName: '',
         description: '',
-        gw_type: 'fast'
+        gw_type: 'fast',
+        pick_winner_method: 'automatic',
+        nr_of_participants: null
       }
     }
   },
@@ -81,6 +124,16 @@ export default {
       },
       description: {
         required: false,
+      },
+      nr_of_participants: {
+        required,
+        minLength: minLength(1),
+        integer
+      },
+      nr_of_winners: {
+        required,
+        minLength: minLength(1),
+        integer
       },
     },
   },

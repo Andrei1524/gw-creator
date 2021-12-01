@@ -6,6 +6,7 @@
       :placeholder="placeholder"
       :required="required"
       shadow-none
+      :type='type'
       :style="{color: highlight.color, borderBottom: highlight.borderBottom}"
       :state="v.$dirty ? !v.$error : null"
       aria-describedby="input-live-feedback"
