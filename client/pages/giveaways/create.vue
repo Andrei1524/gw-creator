@@ -63,28 +63,79 @@
               </h5>
             </div>
 
-            <div class='d-flex justify-content-between'>
-              <custom-input
-                v-model='form.nr_of_participants'
-                :name="'nr_of_participants'"
-                :label="'nr. of participants:'"
-                :label-for="'nr_of_participants'"
-                :type="'number'"
-                :placeholder="'enter nr. of participants'"
-                :v="$v.form.nr_of_participants"
-                :required="true"
-              />
-              <custom-input
-                v-model='form.nr_of_winners'
-                :name="'nr_of_winners'"
-                :label="'nr. of winners:'"
-                :label-for="'nr_of_winners'"
-                :type="'number'"
-                :placeholder="'enter a nr. of winners'"
-                :v="$v.form.nr_of_winners"
-                :required="true"
-              />
+            <b-row>
+              <b-col>
+                <custom-input
+                  v-model='form.nr_of_participants'
+                  :name="'nr_of_participants'"
+                  :label="'nr. of participants:'"
+                  :label-for="'nr_of_participants'"
+                  :type="'number'"
+                  :placeholder="'enter nr. of participants'"
+                  :v="$v.form.nr_of_participants"
+                  :required="true"
+                />
+              </b-col>
+              <b-col>
+                <custom-input
+                  v-model='form.nr_of_winners'
+                  :name="'nr_of_winners'"
+                  :label="'nr. of winners:'"
+                  :label-for="'nr_of_winners'"
+                  :type="'number'"
+                  :placeholder="'enter a nr. of winners'"
+                  :v="$v.form.nr_of_winners"
+                  :required="true"
+                />
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="3">
+                <custom-input
+                  v-model='form.duration'
+                  :name="'duration'"
+                  :label="'duration:'"
+                  :label-for="'duration'"
+                  :type="'number'"
+                  :placeholder="'ex: 0.3h / 3h'"
+                  :v="$v.form.duration"
+                  :required="true"
+                />
+              </b-col>
+            </b-row>
+
+            <!-- PUBLIC/PRIVATE -->
+            <customOptionPicker
+              v-model='form.available'
+              :default_option='form.available'
+              :title="'giveaway is:'"
+              :name="'available'"
+              :option1="'public'"
+              :option2="'private'"
+              @choose_option="chooseOption"
+            />
+            <div class="info-box">
+              <h5>
+                * public: will be visible on the front page, you can provide a
+                password or make the user find it on your product page or youtube
+                link or leave it open for everyone ( useful for promoting your
+                product, organisation, youtube channel, etc. )
+              </h5>
+              <h5>
+                * private: will not be shown on the front page, users can enter
+                only by the link
+              </h5>
             </div>
+
+            <b-button class='custom-btn' :class="{ 'btn-error': $v.$error }" type="submit" variant="primary" @click='onSubmit'>
+              <b-spinner v-show='loading' small type="grow"></b-spinner>
+              <b-icon
+                icon="gift"
+                aria-hidden="true"
+                style="width: 20px; height: 20px;"
+              ></b-icon>
+              Create
+            </b-button>
           </b-form>
         </b-col>
       </b-row>
@@ -94,14 +145,14 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import { minLength, required, integer } from 'vuelidate/lib/validators'
+import { minLength, required, integer, decimal } from 'vuelidate/lib/validators'
 import customInput from '~/components/customFormElements/customInput'
 import customTextarea from '~/components/customFormElements/customTextarea'
 
 export default {
   name: 'CreateGiveaway',
   components: { customInput, customTextarea },
-  layout: '2columns',
+  layout: 'SplitLayout',
   middleware: 'auth',
 
   data() {
@@ -111,8 +162,12 @@ export default {
         description: '',
         gw_type: 'fast',
         pick_winner_method: 'automatic',
-        nr_of_participants: null
-      }
+        nr_of_participants: null,
+        duration: null,
+        available: 'public'
+      },
+
+      loading: false
     }
   },
 
@@ -135,6 +190,11 @@ export default {
         minLength: minLength(1),
         integer
       },
+      duration: {
+        required,
+        decimal,
+        minGivewayDuration: (value) => value >= 0.1,
+      },
     },
   },
 
@@ -151,6 +211,19 @@ export default {
     chooseOption(option) {
       this._data.form[option.name] = option.option;
     },
+
+    onSubmit(event) {
+      event.preventDefault()
+      this.$v.form.$touch();
+      // if its still pending or an error is returned do not submit
+      if (this.$v.form.$pending || this.$v.form.$error) return;
+      this.loading = true
+
+      const params = { ...this.form }
+      // await this.login(params)
+      console.log(params)
+      this.loading = false
+    }
   }
 }
 </script>
