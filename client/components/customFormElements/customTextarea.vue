@@ -1,19 +1,32 @@
 <template>
-  <b-form-textarea
-    id="textarea-default"
-    v-model="input_value"
-    placeholder="Default textarea"
-    :style="{color: highlight.color, borderBottom: highlight.borderBottom}"
-    rows="3"
-    no-resize
-    @input="v.$touch()"
-    @change="colorChange"
-  ></b-form-textarea>
+  <b-form-group id="input-group" :class="{ 'has-error': v.$error }">
+    <b-form-textarea
+      id="textarea-default"
+      v-model="input_value"
+      placeholder="Default textarea"
+      :style="{color: highlight.color, borderBottom: highlight.borderBottom}"
+      rows="3"
+      no-resize
+      @input="v.$touch()"
+      @change="colorChange"
+    ></b-form-textarea>
+  </b-form-group>
 </template>
 
 <script>
 export default {
   props: {
+    label: {
+      type: String,
+      required: false,
+      default: ''
+    },
+
+    labelFor: {
+      type: String,
+      required: true,
+    },
+
     value: {
       type: String,
       default: ""

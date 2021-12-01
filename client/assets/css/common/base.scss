@@ -3,3 +3,16 @@ body {
   background: url("~assets/images/bg-image.jpg") no-repeat center center fixed;
   background-size: cover;
 }
+
+.info-box {
+  margin: 10px 0;
+  border-left: 4px solid $quarter-opacity-light-blue;
+  padding: 2px 5px;
+}
+.info-box h5 {
+  font-weight: 300;
+  color: #fff;
+  opacity: 0.5;
+  font-size: 12px;
+  margin: 2px 0;
+}

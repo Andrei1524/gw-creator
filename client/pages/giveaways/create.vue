@@ -22,8 +22,28 @@
 
             <customTextarea
               v-model='form.description'
+              :name="'description'"
+              :label="'description:'"
+              :label-for="'description'"
               :v="$v.form.description"
             />
+
+            <!-- FAST/NORMAL OPTION -->
+            <customOptionPicker
+              v-model='form.gw_type'
+              :default_option='form.gw_type'
+              :title="'giveaway type:'"
+              :name="'gw_type'"
+              @choose_option="chooseOption"
+              :option1="'fast'"
+              :option2="'normal'"
+            />
+            <div class="info-box">
+              <h5>* fast: giveaway duration is between 10 min. and 24 hours</h5>
+              <h5>
+                * normal: you can schedule your giveaway duration between dates
+              </h5>
+            </div>
           </b-form>
         </b-col>
       </b-row>
@@ -47,7 +67,8 @@ export default {
     return {
       form: {
         giveawayName: '',
-        description: ''
+        description: '',
+        gw_type: 'fast'
       }
     }
   },
@@ -73,6 +94,10 @@ export default {
     ...mapMutations({
       setComponentToShow: 'setComponentToShow'
     }),
+
+    chooseOption(option) {
+      this._data.form[option.name] = option.option;
+    },
   }
 }
 </script>
