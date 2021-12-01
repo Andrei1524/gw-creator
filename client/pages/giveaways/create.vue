@@ -34,8 +34,8 @@ import customInput from '~/components/customFormElements/customInput'
 export default {
   name: 'CreateGiveaway',
   components: { customInput },
-  middleware: 'auth',
   layout: '2columns',
+  middleware: 'auth',
 
   data() {
     return {

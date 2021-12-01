@@ -14,8 +14,8 @@
     ></b-form-input>
 
     <b-form-invalid-feedback id="input-live-feedback">
-      <span v-if='name ==="email" && v.$error'>enter a valid email</span>
-      <span v-if='name ==="username" && v.$error'>username must be at least 3 characters</span>
+      <span v-if='name === "email" && v.$error'>enter a valid email</span>
+      <span v-if='["username", "giveawayName"].includes(name) && v.$error'>must be at least 3 characters</span>
     </b-form-invalid-feedback>
   </b-form-group>
 </template>
