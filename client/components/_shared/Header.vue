@@ -17,7 +17,7 @@
           v-if="$auth.loggedIn"
           class="ml-auto d-flex align-items-center"
         >
-          <b-nav-item href="#" class="special-nav-item">
+          <b-nav-item to='/giveaways/create' class="special-nav-item">
             <b-icon icon="gift" aria-hidden="true"></b-icon>
             Create
           </b-nav-item>
