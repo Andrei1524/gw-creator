@@ -3,21 +3,25 @@
     <div>
       <h4>Type: <span class="font-weight-light">normal giveaway</span></h4>
 
-      <b-form
-        class="custom-form"
-        novalidate
-      >
-        <custom-input
-          v-model='form.giveawayName'
-          :name="'giveawayName'"
-          :label="'Giveaway name:'"
-          :label-for="'giveawayName'"
-          :type="'text'"
-          :placeholder="'enter a name'"
-          :v="$v.form.giveawayName"
-          :required="true"
-        />
-      </b-form>
+      <b-row>
+        <b-col cols="12" md="10">
+          <b-form
+            class="custom-form"
+            novalidate
+          >
+            <custom-input
+              v-model='form.giveawayName'
+              :name="'giveawayName'"
+              :label="'Giveaway name:'"
+              :label-for="'giveawayName'"
+              :type="'text'"
+              :placeholder="'enter a name'"
+              :v="$v.form.giveawayName"
+              :required="true"
+            />
+          </b-form>
+        </b-col>
+      </b-row>
     </div>
   </div>
 </template>
