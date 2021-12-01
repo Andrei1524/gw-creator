@@ -19,6 +19,11 @@
               :v="$v.form.giveawayName"
               :required="true"
             />
+
+            <customTextarea
+              v-model='form.description'
+              :v="$v.form.description"
+            />
           </b-form>
         </b-col>
       </b-row>
@@ -30,17 +35,19 @@
 import { mapMutations } from 'vuex'
 import { minLength, required } from 'vuelidate/lib/validators'
 import customInput from '~/components/customFormElements/customInput'
+import customTextarea from '~/components/customFormElements/customTextarea'
 
 export default {
   name: 'CreateGiveaway',
-  components: { customInput },
+  components: { customInput, customTextarea },
   layout: '2columns',
   middleware: 'auth',
 
   data() {
     return {
       form: {
-        giveawayName: ''
+        giveawayName: '',
+        description: ''
       }
     }
   },
@@ -50,6 +57,9 @@ export default {
       giveawayName: {
         required,
         minLength: minLength(3),
+      },
+      description: {
+        required: false,
       },
     },
   },

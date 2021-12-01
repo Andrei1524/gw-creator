@@ -3,6 +3,19 @@
     <Alert />
     <Header />
     <main>
+      <div class='page-header'>
+        <div class='page-header-wrapper'>
+          <div class='page-title d-flex align-content-center'>
+            <b-icon
+              icon="gift-fill"
+              aria-hidden="true"
+              style="width: 30px; height: 30px;"
+            ></b-icon>
+            <h3 class='ml-2'>CREATE GIVEAWAY</h3>
+          </div>
+        </div>
+        <hr class="white-hr" />
+      </div>
       <div class='container mt-4' fluid>
         <b-row align-h="between">
           <b-col cols="12" md="8">
@@ -36,3 +49,20 @@ export default {
   },
 }
 </script>
+
+<style lang='scss'>
+@import './assets/css/variables';
+
+.page-header-wrapper {
+  padding: 0.5em 2em;
+  h3 {
+    margin: 0;
+  }
+
+  .page-title {
+    .b-icon {
+      color: $white;
+    }
+  }
+}
+</style>

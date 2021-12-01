@@ -88,7 +88,7 @@ btn:focus, a:focus {
     color: $light-gray;
   }
 
-  input {
+  input, textarea {
     border: none;
     background: #1a1a1b61;
     transition: border .4s;
@@ -100,7 +100,21 @@ btn:focus, a:focus {
     font-size: 14px;
   }
 
+  textarea::placeholder {
+    color: $quarter-opacity-white;
+    font-size: 14px;
+  }
+
   input:focus {
+    outline: none;
+    border-color: unset;
+    border-bottom: 2px solid #d0bb8f!important;
+    color: $light-gray !important;
+    box-shadow: none;
+    background: #1a1a1b61;
+  }
+
+  textarea:focus {
     outline: none;
     border-color: unset;
     border-bottom: 2px solid #d0bb8f!important;
