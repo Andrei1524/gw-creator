@@ -10,13 +10,13 @@
             novalidate
           >
             <custom-input
-              v-model='form.giveawayName'
-              :name="'giveawayName'"
+              v-model='form.giveaway_name'
+              :name="'giveaway_name'"
               :label="'Giveaway name:'"
-              :label-for="'giveawayName'"
+              :label-for="'giveaway_name'"
               :type="'text'"
               :placeholder="'enter a name'"
-              :v="$v.form.giveawayName"
+              :v="$v.form.giveaway_name"
               :required="true"
             />
 
@@ -163,7 +163,7 @@ export default {
   data() {
     return {
       form: {
-        giveawayName: '',
+        giveaway_name: '',
         description: '',
         gw_type: 'fast',
         pick_winner_method: 'automatic',
@@ -179,7 +179,7 @@ export default {
 
   validations: {
     form: {
-      giveawayName: {
+      giveaway_name: {
         required,
         minLength: minLength(3),
       },
