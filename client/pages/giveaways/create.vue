@@ -92,7 +92,7 @@
             <b-row>
               <b-col cols="3">
                 <custom-input
-                  v-model='form.duration'
+                  v-model='computedDuration'
                   :name="'duration'"
                   :label="'duration:'"
                   :label-for="'duration'"
@@ -101,6 +101,9 @@
                   :v="$v.form.duration"
                   :required="true"
                 />
+              </b-col>
+              <b-col align-self="center">
+                <span>{{ convertDuration }}</span>
               </b-col>
             </b-row>
 
@@ -144,8 +147,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
+import formatDuration from 'date-fns/formatDuration'
 import { mapMutations } from 'vuex'
-import { minLength, required, integer, decimal } from 'vuelidate/lib/validators'
+import { decimal, integer, minLength, required } from 'vuelidate/lib/validators'
 import customInput from '~/components/customFormElements/customInput'
 import customTextarea from '~/components/customFormElements/customTextarea'
 
@@ -162,8 +167,9 @@ export default {
         description: '',
         gw_type: 'fast',
         pick_winner_method: 'automatic',
-        nr_of_participants: null,
-        duration: null,
+        nr_of_participants: '50',
+        nr_of_winners: '1',
+        duration: '0.1',
         available: 'public'
       },
 
@@ -193,9 +199,32 @@ export default {
       duration: {
         required,
         decimal,
-        minGivewayDuration: (value) => value >= 0.1,
+        minGiveawayDuration: (value) => value >= 0.1,
       },
     },
+  },
+
+  computed: {
+    convertDuration() {
+    let totalSeconds = this.form.duration * 3600;
+    const hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    const minutes = Math.floor(totalSeconds / 60);
+
+      return formatDuration({
+        hours,
+        minutes
+      })
+    },
+
+    computedDuration: {
+      get() {
+        return this.form.duration
+      },
+      set: _.debounce(function(newValue) {
+        this.form.duration = (Math.ceil(newValue/0.05)*0.05).toFixed(2)
+      }, 700)
+    }
   },
 
   mounted() {
