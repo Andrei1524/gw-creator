@@ -149,7 +149,7 @@
 <script>
 import _ from 'lodash'
 import formatDuration from 'date-fns/formatDuration'
-import { mapMutations } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import { decimal, integer, minLength, required } from 'vuelidate/lib/validators'
 import customInput from '~/components/customFormElements/customInput'
 import customTextarea from '~/components/customFormElements/customTextarea'
@@ -237,6 +237,10 @@ export default {
       setComponentToShow: 'setComponentToShow'
     }),
 
+    ...mapActions('modules/giveaways', [
+      'createGiveaway'
+    ]),
+
     chooseOption(option) {
       this._data.form[option.name] = option.option;
     },
@@ -250,7 +254,9 @@ export default {
 
       const params = { ...this.form }
       // await this.login(params)
-      console.log(params)
+      this.createGiveaway(params).then(() => {
+        console.log('created giveaway')
+      })
       this.loading = false
     }
   }
