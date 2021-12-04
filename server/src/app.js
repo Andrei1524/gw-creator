@@ -25,27 +25,4 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'))
 })
 
-const Agenda = require('agenda');
-
-const dbURL = process.env.MONGO_URL
-
-const agenda = new Agenda({
-  db: {address: dbURL, collection: 'Agenda'},
-  processEvery: '20 seconds',
-  useUnifiedTopology: true
-});
-
-agenda.define('log hello medium', async job => {
-  const { name } = job.attrs;
-
-  console.log(`Hello ${name} 👋`);
-});
-
-(async function() {
-  await agenda.start(); // Start Agenda instance
-
-  await agenda.schedule('in 2 minutes', 'log hello medium', {name: 'Medium'});
-})();
-
-
 module.exports = app
