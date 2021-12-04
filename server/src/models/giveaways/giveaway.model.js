@@ -19,6 +19,11 @@ async function createGiveaway(giveaway) {
   }
 }
 
+async function scheduleGiveaway() {
+
+}
+
 module.exports = {
   createGiveaway,
+  scheduleGiveaway
 }

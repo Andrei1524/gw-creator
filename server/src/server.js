@@ -14,14 +14,11 @@ const socketServer = io(httpServer, {
 })
 
 const sockets = require('./sockets')
-
 const PORT = process.env.PORT || 3000
 
 async function startServer() { // putem folosi asta oricand avem nevoie sa facem ceva task inainte sa porneasca serverul
   // wait for data then server start listening
   await mongoConnect()
-  // await loadPlanetsData()
-  // await loadLaunchesData()
 
   httpServer.listen(PORT, () => {
     console.log('server listening on port, ', PORT)
