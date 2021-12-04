@@ -24,6 +24,8 @@ async function createGiveaway(giveaway) {
 }
 
 async function scheduleGiveaway(giveaway) {
+  // TODO: pass giveaway ID to the job to close it
+  // its not working currently, not closing the giveaway
   await agenda.schedule('in one minute', 'schedule_giveaway', {giveaway_id: giveaway._id})
 }
 module.exports = {
