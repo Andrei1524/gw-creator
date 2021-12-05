@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const accessTokenExp = 21600
+const accessTokenExp = 604800 // 7 days expiration
 
 function createAccessToken(user) {
   return jwt.sign({ username: user.username }, process.env.JWT_ACCESS_TOKEN_SECRET, {expiresIn: accessTokenExp})
