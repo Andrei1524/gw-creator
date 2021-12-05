@@ -1,13 +1,27 @@
 const Giveaway = require('./giveaway.mongo')
 const agenda = require('../../services/agenda')
 const { giveawayStatuses } = require('../../utils/statuses')
+const add = require('date-fns/add')
+const getTime = require('date-fns/getTime')
+const format = require('date-fns/format')
 
 async function createGiveaway(giveaway) {
   try {
+    let totalSeconds = giveaway.duration * 3600;
+    const hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    const minutes = Math.floor(totalSeconds / 60);
+
+    const end_date = add(new Date(), {
+      hours: hours,
+      minutes: minutes
+    })
+
     const newGiveaway = await new Giveaway({
       available: giveaway.available,
       description: giveaway.description,
       duration: giveaway.duration,
+      end_date,
       giveaway_name: giveaway.giveaway_name,
       gw_type: giveaway.gw_type,
       nr_of_participants: giveaway.nr_of_participants,
@@ -25,7 +39,7 @@ async function createGiveaway(giveaway) {
 }
 
 async function scheduleGiveaway(giveaway) {
-  await agenda.schedule('in 10 seconds', 'schedule_giveaway', {giveaway_id: giveaway.id})
+  await agenda.schedule(giveaway.end_date, 'schedule_giveaway', {giveaway_id: giveaway.id})
 }
 module.exports = {
   createGiveaway,

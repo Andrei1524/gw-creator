@@ -169,7 +169,7 @@ export default {
         pick_winner_method: 'automatic',
         nr_of_participants: '50',
         nr_of_winners: '1',
-        duration: '0.1',
+        duration: '0.02',
         available: 'public'
       },
 
@@ -199,21 +199,24 @@ export default {
       duration: {
         required,
         decimal,
-        minGiveawayDuration: (value) => value >= 0.1,
+        minGiveawayDuration: (value) => value >= 0.01,
       },
     },
   },
 
   computed: {
     convertDuration() {
-    let totalSeconds = this.form.duration * 3600;
-    const hours = Math.floor(totalSeconds / 3600);
-    totalSeconds %= 3600;
-    const minutes = Math.floor(totalSeconds / 60);
+      let totalSeconds = this.form.duration * 3600;
+      const hours = Math.floor(totalSeconds / 3600);
+      totalSeconds %= 3600;
+      const minutes = Math.floor(totalSeconds / 60);
+      totalSeconds %= 60;
+      const seconds = Math.floor(totalSeconds)
 
       return formatDuration({
         hours,
-        minutes
+        minutes,
+        seconds
       })
     },
 
@@ -222,7 +225,9 @@ export default {
         return this.form.duration
       },
       set: _.debounce(function(newValue) {
-        this.form.duration = (Math.ceil(newValue/0.05)*0.05).toFixed(2)
+        // TODO: uncomment this on prod
+        // this.form.duration = (Math.ceil(newValue/0.05)*0.05).toFixed(2)
+        this.form.duration = newValue
       }, 700)
     }
   },
@@ -253,7 +258,6 @@ export default {
       this.loading = true
 
       const params = { ...this.form }
-      // await this.login(params)
       this.createGiveaway(params).then(() => {
         console.log('created giveaway')
       })

@@ -16,6 +16,11 @@ const giveawaySchema = new mongoose.Schema({
     required: true
   },
 
+  end_date: {
+    type: String,
+    required: false
+  },
+
   giveaway_name: {
     type: String,
     required: true
