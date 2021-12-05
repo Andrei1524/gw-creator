@@ -2,8 +2,6 @@ const Giveaway = require('./giveaway.mongo')
 const agenda = require('../../services/agenda')
 const { giveawayStatuses } = require('../../utils/statuses')
 const add = require('date-fns/add')
-const getTime = require('date-fns/getTime')
-const format = require('date-fns/format')
 
 async function createGiveaway(giveaway) {
   try {
