@@ -38,6 +38,7 @@ import Alert from '@/components/_shared/Alert'
 import ShareGiveaway from '@/components/_shared/ShareGiveaway'
 
 export default {
+  name: 'SplitLayout',
   components: { Header, Alert, ShareGiveaway },
 
   data() {
