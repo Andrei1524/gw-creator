@@ -3,3 +3,9 @@
     share giveaway
   </div>
 </template>
+
+<script>
+export default {
+  name: 'ShareGiveaway'
+}
+</script>

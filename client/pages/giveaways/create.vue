@@ -259,7 +259,7 @@ export default {
 
       const params = { ...this.form }
       this.createGiveaway(params).then(() => {
-        console.log('created giveaway')
+        this.$router.replace('/')
       })
       this.loading = false
     }
