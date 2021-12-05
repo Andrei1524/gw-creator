@@ -1,9 +1,13 @@
 <template>
-  <div>
-    Hello
+  <div class='homepage'>
+    <SponsoredCompetitions />
   </div>
 </template>
 
 <script>
-export default {}
+import SponsoredCompetitions from '~/components/homepage/SponsoredCompetitions'
+export default {
+  name: 'Homepage',
+  components: { SponsoredCompetitions }
+}
 </script>

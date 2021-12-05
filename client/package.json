@@ -14,23 +14,24 @@
     "lint": "npm run lint:js"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.14.7",
     "@nuxtjs/auth-next": "5.0.0-1637333559.35dbd53",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/eslint-config": "^6.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.15.1",
-    "nuxt": "^2.15.8",
-    "sass": "^1.43.5",
-    "sass-loader": "^10.2.0",
-    "vuelidate": "^0.7.6",
-    "@babel/eslint-parser": "^7.14.7",
-    "@nuxtjs/eslint-config": "^6.0.1",
-    "@nuxtjs/eslint-module": "^3.0.2",
+    "date-fns": "^2.27.0",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.12.1",
-    "@nuxtjs/dotenv": "^1.4.1"
+    "nuxt": "^2.15.8",
+    "sass": "^1.43.5",
+    "sass-loader": "^10.2.0",
+    "vuelidate": "^0.7.6"
   },
   "devDependencies": {
     "prettier": "^2.3.2"
