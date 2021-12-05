@@ -1,15 +1,13 @@
-const Giveaway = require('../models/user.mongo')
+const Giveaway = require('../models/giveaways/giveaway.mongo')
 
 const { giveawayStatuses } = require('../utils/statuses')
 
 module.exports = (agenda) => {
   agenda.define('schedule_giveaway', async (job, done) => {
-    const jobGiveawayID = job.attrs.data._id
+    const giveaway_id = job.attrs.data.giveaway_id
 
-    // close the giveaway on the date
-    await Giveaway.findOneAndUpdate({id: jobGiveawayID}, {
-      status: giveawayStatuses.CLOSED
-    })
-    done()
+    await Giveaway.findOneAndUpdate({_id: giveaway_id}, {status: giveawayStatuses.CLOSED})
+    console.log('closed giveaway: ', giveaway_id)
+    return done()
   });
 }

@@ -16,17 +16,16 @@ async function createGiveaway(giveaway) {
       status: giveawayStatuses.OPEN
     })
 
-    await newGiveaway.save()
-    await scheduleGiveaway(giveaway)
+    newGiveaway.save().then(async savedGiveaway => {
+      await scheduleGiveaway(savedGiveaway)
+    })
   } catch (err) {
     throw Error(err)
   }
 }
 
 async function scheduleGiveaway(giveaway) {
-  // TODO: pass giveaway ID to the job to close it
-  // its not working currently, not closing the giveaway
-  await agenda.schedule('in one minute', 'schedule_giveaway', {giveaway_id: giveaway._id})
+  await agenda.schedule('in 10 seconds', 'schedule_giveaway', {giveaway_id: giveaway.id})
 }
 module.exports = {
   createGiveaway,
