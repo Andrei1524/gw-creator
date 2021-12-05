@@ -16,7 +16,7 @@
         </div>
         <hr class="white-hr" />
       </div>
-      <div class='container mt-4' fluid>
+      <b-container class='container mt-4' fluid>
         <b-row align-h="between">
           <b-col cols="12" md="8">
             <Nuxt />
@@ -25,7 +25,7 @@
             <ShareGiveaway v-if="componentToShow === 'share-giveaway'" />
           </b-col>
         </b-row>
-      </div>
+      </b-container>
     </main>
   </div>
 </template>
