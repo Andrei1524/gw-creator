@@ -5,12 +5,12 @@
     <main>
       <b-container class='container mt-3' fluid>
         <b-row align-h="between">
-          <b-col cols="12" md="8">
+          <b-col cols="12" md="12">
             <Nuxt />
           </b-col>
-          <b-col cols="12" md="4" align-h="center">
-            <ShareGiveaway v-if="componentToShow === 'share-giveaway'" />
-          </b-col>
+<!--          <b-col cols="12" md="4" align-h="center">-->
+<!--            <ShareGiveaway v-if="componentToShow === 'share-giveaway'" />-->
+<!--          </b-col>-->
         </b-row>
       </b-container>
     </main>
