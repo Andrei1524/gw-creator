@@ -16,12 +16,15 @@
         </div>
         <hr class="white-hr" />
       </div>
-      <b-container class='container mt-4' fluid>
+      <b-container class='mt-4' fluid>
         <b-row align-h="between">
+          <b-col cols="12" md='2'>
+            <LiveWins />
+          </b-col>
           <b-col cols="12" md="8">
             <Nuxt />
           </b-col>
-          <b-col cols="12" md="4" align-h="center">
+          <b-col cols="12" md="2" align-h="center">
             <ShareGiveaway v-if="componentToShow === 'share-giveaway'" />
           </b-col>
         </b-row>
@@ -36,10 +39,11 @@ import Header from '@/components/_shared/Header'
 import Alert from '@/components/_shared/Alert'
 
 import ShareGiveaway from '@/components/_shared/ShareGiveaway'
+import LiveWins from '~/components/_shared/LiveWins'
 
 export default {
   name: 'SplitLayout',
-  components: { Header, Alert, ShareGiveaway },
+  components: { Header, Alert, ShareGiveaway, LiveWins },
 
   data() {
     return {}
