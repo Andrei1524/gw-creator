@@ -16,8 +16,8 @@
         </div>
         <hr class="white-hr" />
       </div>
-      <b-container class='mt-4' fluid>
-        <b-row align-h="between">
+      <b-container class='custom-container mt-4' fluid>
+        <b-row align-h="between" no-gutters>
           <b-col cols="12" md='2'>
             <LiveWins />
           </b-col>
@@ -60,6 +60,7 @@ export default {
 
 .page-header-wrapper {
   padding: 0.5em 2em;
+
   h3 {
     margin: 0;
   }
@@ -69,5 +70,9 @@ export default {
       color: $white;
     }
   }
+}
+
+.custom-container {
+  padding: 0;
 }
 </style>
