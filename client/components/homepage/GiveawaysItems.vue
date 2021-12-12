@@ -14,16 +14,18 @@ export default {
     }
   },
 
-  async mounted() {
+  async created() {
     await this.handleGetGiveaways()
   },
+
 
   methods: {
     ...mapActions('modules/giveaways', ['getGiveaways']),
 
     async handleGetGiveaways() {
-      this.giveaways = await this.getGiveaways()
+      const computedQueries = `?page=1`
+      this.giveaways = await this.getGiveaways(computedQueries)
     }
-  }
+  },
 }
 </script>

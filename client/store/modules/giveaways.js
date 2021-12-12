@@ -11,9 +11,9 @@ export const actions = {
     }
   },
 
-  async getGiveaways({ commit }) {
+  async getGiveaways({ commit }, payload) {
     try {
-      return await this.$axios.get('/giveaways')
+      return await this.$axios.get(`/giveaways${payload}`)
     } catch (err) {
       showAlert(commit, err, 'warning')
     }

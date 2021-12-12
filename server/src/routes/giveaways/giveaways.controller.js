@@ -14,7 +14,7 @@ async function httpCreateGiveaway(req, res) {
 
 async function httpGetGiveaways(req, res) {
   try {
-    const { page } = req.body
+    const { page } = req.query
     const giveaways = await getGiveaways(page)
     res.status(200).json({giveaways})
   } catch (err) {
