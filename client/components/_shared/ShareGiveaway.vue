@@ -9,3 +9,7 @@ export default {
   name: 'ShareGiveaway'
 }
 </script>
+
+<style>
+
+</style>

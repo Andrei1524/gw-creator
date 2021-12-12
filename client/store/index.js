@@ -1,9 +1,12 @@
 export const state = () => ({
-  componentToShow: '',
+  splitLayoutSettings: {
+    showPageHeader: false,
+    componentToShow: '',
+  }
 })
 
 export const mutations = {
   setComponentToShow(state, name) {
-    state.componentToShow = name
+    state.splitLayoutSettings.componentToShow = name
   },
 }

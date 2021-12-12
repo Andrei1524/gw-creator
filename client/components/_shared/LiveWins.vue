@@ -11,3 +11,9 @@ export default {
   }
 }
 </script>
+
+<style lang='scss' scoped>
+.live-wins {
+  width: 150px;
+}
+</style>

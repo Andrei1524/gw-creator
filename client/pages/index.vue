@@ -8,6 +8,7 @@
 import SponsoredCompetitions from '~/components/homepage/SponsoredCompetitions'
 export default {
   name: 'Homepage',
-  components: { SponsoredCompetitions }
+  components: { SponsoredCompetitions },
+  layout: 'SplitLayout'
 }
 </script>

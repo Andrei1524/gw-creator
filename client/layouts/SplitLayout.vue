@@ -3,13 +3,13 @@
     <Alert />
     <Header />
     <main>
-      <div class='page-header'>
+      <div v-if='splitLayoutSettings["showPageHeader"]' class='page-header'>
         <div class='page-header-wrapper'>
           <div class='page-title d-flex align-content-center'>
             <b-icon
               icon="gift-fill"
               aria-hidden="true"
-              style="width: 30px; height: 30px;"
+              style="width: 25px; height: 25px;"
             ></b-icon>
             <h3 class='ml-2'>CREATE GIVEAWAY</h3>
           </div>
@@ -17,15 +17,13 @@
         <hr class="white-hr" />
       </div>
       <b-container class='custom-container mt-4' fluid>
-        <b-row align-h="between" no-gutters>
-          <b-col cols="12" md='2'>
-            <LiveWins />
-          </b-col>
-          <b-col cols="12" md="8">
+        <b-row no-gutters>
+          <LiveWins />
+          <b-col cols="6" class='ml-auto'>
             <Nuxt />
           </b-col>
-          <b-col cols="12" md="2" align-h="center">
-            <ShareGiveaway v-if="componentToShow === 'share-giveaway'" />
+          <b-col class='ml-auto right-comp'>
+            <ShareGiveaway v-if="splitLayoutSettings['componentToShow'] === 'share-giveaway'" />
           </b-col>
         </b-row>
       </b-container>
@@ -50,7 +48,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['componentToShow']),
+    ...mapState(['splitLayoutSettings']),
   },
 }
 </script>
@@ -74,5 +72,9 @@ export default {
 
 .custom-container {
   padding: 0;
+}
+
+.right-comp {
+  max-width: 360px;
 }
 </style>
