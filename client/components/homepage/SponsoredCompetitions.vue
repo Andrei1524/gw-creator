@@ -56,6 +56,8 @@ export default {
 @import './assets/css/variables';
 
 .custom-carousel {
+  max-height: 150px;
+
   img {
     max-height: 160px;
   }

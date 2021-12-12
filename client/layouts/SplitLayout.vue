@@ -16,13 +16,13 @@
         </div>
         <hr class="white-hr" />
       </div>
-      <b-container class='custom-container mt-4' fluid>
+      <b-container class='custom-container' fluid>
         <b-row no-gutters>
           <LiveWins />
-          <b-col cols="6" class='ml-auto'>
+          <b-col cols="8" :class='{ "ml-auto" : splitLayoutSettings["isMarginLeftAuto"] }'>
             <Nuxt />
           </b-col>
-          <b-col class='ml-auto right-comp'>
+          <b-col cols='12' md='auto' class='ml-auto right-comp'>
             <ShareGiveaway v-if="splitLayoutSettings['componentToShow'] === 'share-giveaway'" />
           </b-col>
         </b-row>

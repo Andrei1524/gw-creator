@@ -1,5 +1,5 @@
 <template>
-  <div class="create-page">
+  <div class="create-page mt-3">
     <div>
       <h4>Type: <span class="font-weight-light">normal giveaway</span></h4>
 
@@ -90,7 +90,7 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col cols="3">
+              <b-col cols="6" md="2">
                 <custom-input
                   v-model='computedDuration'
                   :name="'duration'"
@@ -234,7 +234,11 @@ export default {
 
   mounted() {
     // TODO: refactor method into utils maybe
-    this.setComponentToShow('share-giveaway')
+    this.setComponentToShow({
+      showPageHeader: true,
+      name: 'share-giveaway',
+      isMarginLeftAuto: true
+    })
   },
 
   methods: {

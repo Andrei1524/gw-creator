@@ -9,6 +9,14 @@ export const actions = {
     } catch (err) {
       showAlert(commit, err, 'warning')
     }
+  },
+
+  async getGiveaways({ commit }) {
+    try {
+      return await this.$axios.get('/giveaways')
+    } catch (err) {
+      showAlert(commit, err, 'warning')
+    }
   }
 }
 
