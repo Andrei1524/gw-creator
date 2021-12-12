@@ -59,7 +59,7 @@ export default {
   max-height: 150px;
 
   img {
-    max-height: 160px;
+    max-height: 150px;
   }
 
   .carousel-indicators {

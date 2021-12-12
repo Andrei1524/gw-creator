@@ -1,6 +1,6 @@
 <template>
   <div class='giveaways-items'>
-    <GiveawayItem v-for='giveaway in giveaways' :key='giveaway.id' :giveaway='giveaway' />
+    <GiveawayItem v-for='giveaway in giveaways' :key='giveaway.id' :giveaway='giveaway'/>
   </div>
 </template>
 
@@ -32,3 +32,10 @@ export default {
   },
 }
 </script>
+
+<style lang='scss' scoped>
+.giveaways-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+</style>

@@ -13,3 +13,9 @@ export default {
   }
 }
 </script>
+
+<style lang='scss'>
+.giveaway-item {
+  border: 1px solid black;
+}
+</style>

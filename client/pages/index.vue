@@ -1,7 +1,7 @@
 <template>
   <div class='homepage mt-3'>
     <SponsoredCompetitions />
-    <GiveawaysItems />
+    <GiveawaysItems class='mt-4' />
   </div>
 </template>
 
