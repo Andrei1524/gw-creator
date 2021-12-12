@@ -16,7 +16,7 @@ async function httpGetGiveaways(req, res) {
   try {
     const { page } = req.query
     const giveaways = await getGiveaways(page)
-    res.status(200).json({giveaways})
+    res.status(200).json(giveaways)
   } catch (err) {
     return res.status(422).json({error: err.message})
   }

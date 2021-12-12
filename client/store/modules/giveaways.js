@@ -13,7 +13,8 @@ export const actions = {
 
   async getGiveaways({ commit }, payload) {
     try {
-      return await this.$axios.get(`/giveaways${payload}`)
+      const response = await this.$axios.get(`/giveaways${payload}`)
+      return response.data
     } catch (err) {
       showAlert(commit, err, 'warning')
     }
