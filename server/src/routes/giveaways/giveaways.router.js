@@ -5,8 +5,9 @@ const giveawaysRouter = express.Router()
 const { authenticateJWT } = require('../../middleware/authenticateJWT')
 
 // controllers
-const { httpCreateGiveaway } = require('./giveaways.controller')
+const { httpCreateGiveaway, httpGetGiveaways } = require('./giveaways.controller')
 
 giveawaysRouter.post('/create_giveaway', authenticateJWT, httpCreateGiveaway)
+giveawaysRouter.get('/', httpGetGiveaways)
 
 module.exports = giveawaysRouter

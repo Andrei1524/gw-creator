@@ -13,4 +13,8 @@ api.use('/currentUser', userRouter)
 api.use('/dashboard', dashboardRouter)
 api.use('/giveaways', giveawaysRouter)
 
+api.get('*', (req, res) =>  {
+  res.status(404).json({error: 'not found'})
+});
+
 module.exports = api

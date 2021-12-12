@@ -2,6 +2,7 @@ const Giveaway = require('./giveaway.mongo')
 const agenda = require('../../services/agenda')
 const { giveawayStatuses } = require('../../utils/statuses')
 const add = require('date-fns/add')
+const { PAGE_SIZE } = require('../../config')
 
 async function createGiveaway(giveaway) {
   try {
@@ -39,7 +40,20 @@ async function createGiveaway(giveaway) {
 async function scheduleGiveaway(giveaway) {
   await agenda.schedule(giveaway.end_date, 'schedule_giveaway', {giveaway_id: giveaway.id})
 }
+
+async function getGiveaways(page) {
+  if (!page) throw  Error('page is required')
+  if (page <= 0) page = 1
+
+  const skip = (page - 1) * PAGE_SIZE
+  return Giveaway.find({})
+    .skip(skip)
+    .limit(PAGE_SIZE)
+    .sort({createdAt: 'descending'})
+    .exec()
+}
 module.exports = {
   createGiveaway,
-  scheduleGiveaway
+  scheduleGiveaway,
+  getGiveaways
 }

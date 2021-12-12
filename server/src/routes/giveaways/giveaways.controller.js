@@ -1,6 +1,6 @@
 let _ = require('lodash');
 
-const { createGiveaway } = require('../../models/giveaways/giveaway.model')
+const { createGiveaway, getGiveaways } = require('../../models/giveaways/giveaway.model')
 
 async function httpCreateGiveaway(req, res) {
  try {
@@ -12,6 +12,17 @@ async function httpCreateGiveaway(req, res) {
  }
 }
 
+async function httpGetGiveaways(req, res) {
+  try {
+    const { page } = req.body
+    const giveaways = await getGiveaways(page)
+    res.status(200).json({giveaways})
+  } catch (err) {
+    return res.status(422).json({error: err.message})
+  }
+}
+
 module.exports = {
-  httpCreateGiveaway
+  httpCreateGiveaway,
+  httpGetGiveaways
 }
