@@ -53,7 +53,7 @@ export default {
 
   position: relative;
   border: 2px solid $black;
-  height: 80px;
+  height: 100px;
 }
 
 .hours-left{
