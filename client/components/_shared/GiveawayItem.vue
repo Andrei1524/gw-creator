@@ -1,16 +1,16 @@
 <template>
-  <div class='giveaway-item'>
+  <div class='giveaway-item' :style='{"background-image": `url(${require("@/assets/images/gw_background_default.PNG")})`}'>
     <div class='title position-absolute'>
       <span class='font-size-12'>from User </span>
-      <h6>{{ giveaway.giveaway_name }}</h6>
+      <h6 class='font-weight-bolder'>{{ giveaway.giveaway_name }}</h6>
     </div>
 
     <div class='hours-left position-absolute'>
-      <span class='font-size-12 d-block'>3 hours left</span>
+      <span class='font-size-12 d-block font-weight-bolder etiquete'>3 hours left</span>
     </div>
 
     <div class='participants position-absolute d-flex'>
-      <span class='font-size-12 d-block mr-1'>20/{{ giveaway.nr_of_participants }} </span>
+      <span class='font-size-12 d-block mr-1 font-weight-bolder'>20/{{ giveaway.nr_of_participants }} </span>
       <b-icon
         v-if="giveaway.status === 'closed'"
         icon="lock-fill"
@@ -45,9 +45,14 @@ export default {
 </script>
 
 <style lang='scss'>
+@import './assets/css/variables';
+
 .giveaway-item {
+  background-position: center;
+  background-size: cover;
+
   position: relative;
-  border: 1px solid black;
+  border: 2px solid $black;
   height: 80px;
 }
 
@@ -59,6 +64,7 @@ export default {
 .participants {
   bottom: 6px;
   right: 6px;
+  color: $light-gray;
 }
 
 .title {
@@ -66,6 +72,7 @@ export default {
   left: 6px;
 
   h6 {
+    color: $light-blue;
     margin: 0;
   }
 }
