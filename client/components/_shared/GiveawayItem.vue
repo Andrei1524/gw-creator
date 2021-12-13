@@ -6,7 +6,7 @@
     </div>
 
     <div class='hours-left position-absolute'>
-      <span class='font-size-12 d-block font-weight-bolder etiquete'>3 hours left</span>
+      <span class='font-size-12 d-block font-weight-bolder etiquete'> {{ computeTimeLeft() }} </span>
     </div>
 
     <div class='participants position-absolute d-flex'>
@@ -29,6 +29,10 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
+
 export default {
   name: 'GiveawayItem',
   props: {
@@ -40,6 +44,15 @@ export default {
 
   data() {
     return {}
+  },
+
+  methods: {
+    computeTimeLeft() {
+      // const now = dayjs()
+      // const endDate = dayjs(this.giveaway.end_date)
+
+      return dayjs(this.giveaway.end_date).fromNow()
+    }
   }
 }
 </script>
