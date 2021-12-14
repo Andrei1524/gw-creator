@@ -1,6 +1,8 @@
 let _ = require('lodash');
+const { PAGE_SIZE } = require('../../config')
 
 const { createGiveaway, getGiveaways } = require('../../models/giveaways/giveaway.model')
+const Giveaway = require('../../models/giveaways/giveaway.mongo')
 
 async function httpCreateGiveaway(req, res) {
  try {
@@ -15,8 +17,13 @@ async function httpCreateGiveaway(req, res) {
 async function httpGetGiveaways(req, res) {
   try {
     const { page } = req.query
-    const giveaways = await getGiveaways(page)
-    res.status(200).json(giveaways)
+    // set pagination settings
+    const total_items = await Giveaway.countDocuments({}).exec()
+
+    const giveaways = await getGiveaways(req, res, page)
+    res.status(200).json({
+      giveaways, total_items, PAGE_SIZE
+    })
   } catch (err) {
     return res.status(422).json({error: err.message})
   }

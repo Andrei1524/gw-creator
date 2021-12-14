@@ -1,6 +1,17 @@
 <template>
-  <div class='giveaways-items'>
-    <GiveawayItem v-for='giveaway in giveaways' :key='giveaway.id' :giveaway='giveaway'/>
+  <div>
+    <div class='giveaways-items'>
+      <GiveawayItem v-for='giveaway in giveaways' :key='giveaway.id' :giveaway='giveaway'/>
+    </div>
+    <b-pagination
+      v-model="currentPage"
+      class='mt-2'
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="my-table"
+      size='md'
+      @input='handleGetGiveaways()'
+    ></b-pagination>
   </div>
 </template>
 
@@ -13,7 +24,10 @@ export default {
 
   data() {
     return {
-      giveaways: []
+      giveaways: [],
+      currentPage: 1,
+      perPage: 0,
+      rows: 0
     }
   },
 
@@ -21,13 +35,15 @@ export default {
     await this.handleGetGiveaways()
   },
 
-
   methods: {
     ...mapActions('modules/giveaways', ['getGiveaways']),
 
     async handleGetGiveaways() {
-      const computedQueries = `?page=1`
-      this.giveaways = await this.getGiveaways(computedQueries)
+      const computedQueries = `?page=${this.currentPage}`
+      const response = await this.getGiveaways(computedQueries)
+      this.giveaways = response.data.giveaways
+      this.perPage = response.data.PAGE_SIZE
+      this.rows = response.data.total_items
     }
   },
 }

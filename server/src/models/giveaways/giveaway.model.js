@@ -42,7 +42,7 @@ async function scheduleGiveaway(giveaway) {
   await agenda.schedule(giveaway.end_date, 'schedule_giveaway', {giveaway_id: giveaway.id})
 }
 
-async function getGiveaways(page) {
+async function getGiveaways(req, res, page) {
   if (!page) throw  Error('page is required')
   if (page <= 0) page = 1
 
