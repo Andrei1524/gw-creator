@@ -6,3 +6,11 @@
   background: $quarter-opacity-white;
   padding: 2px 8px;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.no-select {
+  user-select: none;
+}
