@@ -5,7 +5,7 @@ const { createGiveaway, getGiveaways } = require('../../models/giveaways/giveawa
 async function httpCreateGiveaway(req, res) {
  try {
    const giveaway = req.body
-   await createGiveaway(giveaway)
+   await createGiveaway(req, res, giveaway)
    res.sendStatus(200)
  } catch (err) {
    return res.status(401).json({error: err.message})

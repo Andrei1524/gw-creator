@@ -4,7 +4,7 @@ const { giveawayStatuses } = require('../../utils/statuses')
 const add = require('date-fns/add')
 const { PAGE_SIZE } = require('../../config')
 
-async function createGiveaway(giveaway) {
+async function createGiveaway(req, res, giveaway) {
   try {
     let totalSeconds = giveaway.duration * 3600;
     const hours = Math.floor(totalSeconds / 3600);
@@ -26,6 +26,7 @@ async function createGiveaway(giveaway) {
       nr_of_participants: giveaway.nr_of_participants,
       nr_of_winners: giveaway.nr_of_winners,
       pick_winner_method: giveaway.pick_winner_method,
+      created_by: req.user._id,
       status: giveawayStatuses.OPEN
     })
 
@@ -50,6 +51,7 @@ async function getGiveaways(page) {
     .skip(skip)
     .limit(PAGE_SIZE)
     .sort({createdAt: 'descending'})
+    .populate('created_by', 'username')
     .exec()
 }
 module.exports = {

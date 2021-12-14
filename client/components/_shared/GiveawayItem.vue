@@ -1,7 +1,7 @@
 <template>
   <div class='giveaway-item' :style='{"background-image": `url(${require("@/assets/images/gw_background_default.PNG")})`}'>
     <div class='title position-absolute'>
-      <span class='font-size-12'>from User </span>
+      <span class='font-size-12'>from {{ giveaway.created_by.username }} </span>
       <h6 class='font-weight-bolder'>{{ giveaway.giveaway_name }}</h6>
     </div>
 
