@@ -1,8 +1,10 @@
 <template>
   <div>
     <b-spinner v-if='loading' class='loader-center' small type="grow"></b-spinner>
-    <div class='giveaways-items'>
-      <GiveawayItem v-for='giveaway in giveaways' :key='giveaway.id' :giveaway='giveaway'/>
+    <div v-else class='giveaways-items'>
+      <NuxtLink v-for='giveaway in giveaways' :key='giveaway.id' :to="'giveaways/' + friendlyUrl(giveaway.giveaway_name)">
+        <GiveawayItem :giveaway='giveaway' />
+      </NuxtLink>
     </div>
     <b-pagination
       v-model="currentPage"
@@ -19,6 +21,7 @@
 <script>
 import { mapActions } from 'vuex'
 import GiveawayItem from '~/components/_shared/GiveawayItem'
+import { friendlyUrl } from '~/utils/generalUtils'
 
 export default {
   components: { GiveawayItem },
@@ -29,7 +32,8 @@ export default {
       currentPage: 1,
       perPage: 0,
       rows: 0,
-      loading: false
+      loading: false,
+      friendlyUrl
     }
   },
 

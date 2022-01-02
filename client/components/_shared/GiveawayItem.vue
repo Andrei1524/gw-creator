@@ -48,9 +48,6 @@ export default {
 
   methods: {
     computeTimeLeft() {
-      // const now = dayjs()
-      // const endDate = dayjs(this.giveaway.end_date)
-
       return dayjs(this.giveaway.end_date).fromNow()
     }
   }
