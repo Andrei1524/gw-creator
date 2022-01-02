@@ -1,7 +1,8 @@
 const Giveaway = require('./giveaway.mongo')
 const agenda = require('../../services/agenda')
-const { giveawayStatuses } = require('../../utils/statuses')
 const add = require('date-fns/add')
+const { nanoid } = require('nanoid')
+const { giveawayStatuses } = require('../../utils/statuses')
 const { PAGE_SIZE } = require('../../config')
 
 async function createGiveaway(req, res, giveaway) {
@@ -22,6 +23,7 @@ async function createGiveaway(req, res, giveaway) {
       duration: giveaway.duration,
       end_date,
       giveaway_name: giveaway.giveaway_name,
+      generatedId: nanoid(8),
       gw_type: giveaway.gw_type,
       nr_of_participants: giveaway.nr_of_participants,
       nr_of_winners: giveaway.nr_of_winners,

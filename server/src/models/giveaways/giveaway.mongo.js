@@ -27,6 +27,11 @@ const giveawaySchema = new mongoose.Schema({
     required: true
   },
 
+  generatedId: {
+    type: String,
+    required: true
+  },
+
   gw_type: {
     type: String,
     required: true
