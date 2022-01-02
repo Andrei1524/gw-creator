@@ -6,8 +6,8 @@
       <b-container class='custom-container' fluid>
         <b-row no-gutters>
           <LiveWins />
-          <b-col cols="8" :class='{ "ml-auto" : splitLayoutSettings["isMarginLeftAuto"] }'>
-            <div v-if='splitLayoutSettings["showPageHeader"]' class='page-header'>
+          <b-col :class='{ "ml-auto" : splitLayoutSettings["isMarginLeftAuto"] }'>
+            <div v-if='splitLayoutSettings.showPageHeader' class='page-header mt-2'>
               <div class='page-header-wrapper'>
                 <div class='page-title d-flex align-content-center align-items-center'>
                   <b-icon
@@ -15,14 +15,14 @@
                     aria-hidden="true"
                     style="width: 25px; height: 25px;"
                   ></b-icon>
-                  <h4 class='ml-2'>{{ splitLayoutSettings['componentToShow'] }}</h4>
+                  <h4 class='ml-2'>{{ splitLayoutSettings.headerTitle }} </h4>
                 </div>
               </div>
               <hr class="white-hr" />
             </div>
             <Nuxt />
           </b-col>
-          <b-col cols='12' md='auto' class='ml-auto right-comp'>
+          <b-col v-if="splitLayoutSettings['componentToShow'] === 'share-giveaway'"  cols='12' md='4' class='ml-auto right-comp'>
             <ShareGiveaway v-if="splitLayoutSettings['componentToShow'] === 'share-giveaway'" />
           </b-col>
         </b-row>

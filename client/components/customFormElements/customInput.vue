@@ -5,6 +5,7 @@
       v-model="input_value"
       :placeholder="placeholder"
       :required="required"
+      autocomplete="off"
       shadow-none
       :type='type'
       :style="{color: highlight.color, borderBottom: highlight.borderBottom}"
