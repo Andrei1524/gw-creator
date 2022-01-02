@@ -236,8 +236,8 @@ export default {
     // TODO: refactor method into utils maybe
     this.setComponentToShow({
       showPageHeader: true,
-      name: 'share-giveaway',
-      isMarginLeftAuto: true
+      name: 'Create giveaway',
+      isMarginLeftAuto: false
     })
   },
 

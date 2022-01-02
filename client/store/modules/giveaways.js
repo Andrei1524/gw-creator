@@ -17,6 +17,15 @@ export const actions = {
     } catch (err) {
       showAlert(commit, err, 'warning')
     }
+  },
+
+  async getGiveaway({ commit }, generatedId) {
+    try {
+      const response = await this.$axios.get(`/giveaways/${generatedId}`)
+      return response.data
+    } catch (err) {
+      showAlert(commit, err, 'warning')
+    }
   }
 }
 

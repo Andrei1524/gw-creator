@@ -49,15 +49,21 @@ async function getGiveaways(req, res, page) {
   if (page <= 0) page = 1
 
   const skip = (page - 1) * PAGE_SIZE
-  return Giveaway.find({})
+  return await Giveaway.find({})
     .skip(skip)
     .limit(PAGE_SIZE)
     .sort({createdAt: 'descending'})
     .populate('created_by', 'username')
     .exec()
 }
+
+async function getGiveaway(req, res, generatedId) {
+  return await Giveaway.findOne({generatedId}).lean().exec()
+}
+
 module.exports = {
   createGiveaway,
   scheduleGiveaway,
-  getGiveaways
+  getGiveaways,
+  getGiveaway
 }

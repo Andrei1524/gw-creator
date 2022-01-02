@@ -3,23 +3,23 @@
     <Alert />
     <Header />
     <main>
-      <div v-if='splitLayoutSettings["showPageHeader"]' class='page-header'>
-        <div class='page-header-wrapper'>
-          <div class='page-title d-flex align-content-center'>
-            <b-icon
-              icon="gift-fill"
-              aria-hidden="true"
-              style="width: 25px; height: 25px;"
-            ></b-icon>
-            <h3 class='ml-2'>CREATE GIVEAWAY</h3>
-          </div>
-        </div>
-        <hr class="white-hr" />
-      </div>
       <b-container class='custom-container' fluid>
         <b-row no-gutters>
           <LiveWins />
           <b-col cols="8" :class='{ "ml-auto" : splitLayoutSettings["isMarginLeftAuto"] }'>
+            <div v-if='splitLayoutSettings["showPageHeader"]' class='page-header'>
+              <div class='page-header-wrapper'>
+                <div class='page-title d-flex align-content-center align-items-center'>
+                  <b-icon
+                    icon="gift-fill"
+                    aria-hidden="true"
+                    style="width: 25px; height: 25px;"
+                  ></b-icon>
+                  <h4 class='ml-2'>{{ splitLayoutSettings['componentToShow'] }}</h4>
+                </div>
+              </div>
+              <hr class="white-hr" />
+            </div>
             <Nuxt />
           </b-col>
           <b-col cols='12' md='auto' class='ml-auto right-comp'>
@@ -59,7 +59,7 @@ export default {
 .page-header-wrapper {
   padding: 0.5em 2em;
 
-  h3 {
+  h4 {
     margin: 0;
   }
 
