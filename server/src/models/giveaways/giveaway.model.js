@@ -1,9 +1,11 @@
 const Giveaway = require('./giveaway.mongo')
 const agenda = require('../../services/agenda')
-const { giveawayStatuses } = require('../../utils/statuses')
 const add = require('date-fns/add')
+const { nanoid } = require('nanoid')
+const { giveawayStatuses } = require('../../utils/statuses')
+const { PAGE_SIZE } = require('../../config')
 
-async function createGiveaway(giveaway) {
+async function createGiveaway(req, res, giveaway) {
   try {
     let totalSeconds = giveaway.duration * 3600;
     const hours = Math.floor(totalSeconds / 3600);
@@ -21,10 +23,12 @@ async function createGiveaway(giveaway) {
       duration: giveaway.duration,
       end_date,
       giveaway_name: giveaway.giveaway_name,
+      generatedId: nanoid(8),
       gw_type: giveaway.gw_type,
       nr_of_participants: giveaway.nr_of_participants,
       nr_of_winners: giveaway.nr_of_winners,
       pick_winner_method: giveaway.pick_winner_method,
+      created_by: req.user._id,
       status: giveawayStatuses.OPEN
     })
 
@@ -39,7 +43,27 @@ async function createGiveaway(giveaway) {
 async function scheduleGiveaway(giveaway) {
   await agenda.schedule(giveaway.end_date, 'schedule_giveaway', {giveaway_id: giveaway.id})
 }
+
+async function getGiveaways(req, res, page) {
+  if (!page) throw  Error('page is required')
+  if (page <= 0) page = 1
+
+  const skip = (page - 1) * PAGE_SIZE
+  return await Giveaway.find({})
+    .skip(skip)
+    .limit(PAGE_SIZE)
+    .sort({createdAt: 'descending'})
+    .populate('created_by', 'username')
+    .exec()
+}
+
+async function getGiveaway(req, res, generatedId) {
+  return await Giveaway.findOne({generatedId}).lean().exec()
+}
+
 module.exports = {
   createGiveaway,
-  scheduleGiveaway
+  scheduleGiveaway,
+  getGiveaways,
+  getGiveaway
 }

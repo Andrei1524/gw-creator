@@ -154,3 +154,19 @@ btn:focus, a:focus {
     background: #dc3545;
   }
 }
+
+// CUSTOM PAGINATION
+.page-link {
+  color: $light-gray;
+  background-color: $black;
+  border: none;
+}
+
+.page-item.disabled .page-link {
+  background-color: $black;
+  border: none;
+}
+
+.page-item.active .page-link {
+  background-color: $medium-green;
+}

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const giveawaySchema = new mongoose.Schema({
   available: {
@@ -26,6 +27,11 @@ const giveawaySchema = new mongoose.Schema({
     required: true
   },
 
+  generatedId: {
+    type: String,
+    required: true
+  },
+
   gw_type: {
     type: String,
     required: true
@@ -44,6 +50,11 @@ const giveawaySchema = new mongoose.Schema({
   pick_winner_method: {
     type: String,
     required: true
+  },
+
+  created_by: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
 
   status: {

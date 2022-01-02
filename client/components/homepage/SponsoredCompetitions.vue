@@ -5,7 +5,7 @@
         class='mr-2'
         icon="globe2"
         aria-hidden="true"
-        style="width: 30px; height: 30px"
+        style="width: 25px; height: 25px"
       ></b-icon>
       Sponsored Competitions
     </h5>
@@ -56,8 +56,10 @@ export default {
 @import './assets/css/variables';
 
 .custom-carousel {
+  max-height: 150px;
+
   img {
-    max-height: 160px;
+    max-height: 150px;
   }
 
   .carousel-indicators {

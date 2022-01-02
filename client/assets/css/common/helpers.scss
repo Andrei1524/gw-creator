@@ -1,0 +1,22 @@
+.font-size-12 {
+  font-size: 12px;
+}
+
+.etiquete {
+  background: $quarter-opacity-white;
+  padding: 2px 8px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.no-select {
+  user-select: none;
+}
+
+.loader-center {
+  display: block;
+  text-align: center !important;
+  margin: 20px auto;
+}
