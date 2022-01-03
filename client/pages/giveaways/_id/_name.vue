@@ -15,6 +15,42 @@
               ></b-icon>
               ENROLL
             </b-button>
+
+          <!-- ENROLLED USERS TABLE -->
+            <div class='enrolled-table mt-3'>
+              <div class='table-header'>
+                <b-row align-h="between">
+                  <b-col cols="8" class='d-flex align-items-center'>
+                    <h5>ENROLLED:</h5>
+                    <b-form-input
+                      v-model="searchEnrolled"
+                      class='search ml-3'
+                      type="text"
+                      placeholder="search..."
+                    ></b-form-input>
+                  </b-col>
+                  <b-col cols="4" class='d-flex align-items-center justify-content-end'>
+                    <h6 class='font-size-14'>12 days left</h6>
+                    <div class='status-icon ml-3'>
+                      <b-icon
+                        v-if="giveaway.status === 'closed'"
+                        icon="lock-fill"
+                        aria-hidden="true"
+                        style="width: 25px; height: 25px"
+                      ></b-icon>
+
+                      <b-icon
+                        v-else
+                        icon="unlock-fill"
+                        aria-hidden="true"
+                        style="width: 25px; height: 25px"
+                      ></b-icon>
+                    </div>
+                  </b-col>
+                </b-row>
+              </div>
+              <hr class="white-hr mt-2" />
+            </div>
           </div>
         </b-col>
 
@@ -36,6 +72,7 @@ export default {
   data() {
     return {
       giveaway: {},
+      searchEnrolled: '',
       loadingEnroll: false
     }
   },
@@ -86,5 +123,16 @@ export default {
   font-size: 21px;
   background: $medium-green;
   box-shadow: 0px 3px 7px 0px #0000006e;
+}
+
+.status-icon {
+  color: $white;
+}
+
+.search {
+  background: #d0bb8f26;
+  border: none;
+  color: #fff;
+  border-radius: 20px;
 }
 </style>
