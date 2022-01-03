@@ -61,9 +61,27 @@ async function getGiveaway(req, res, generatedId) {
   return await Giveaway.findOne({generatedId}).lean().exec()
 }
 
+async function enrollUserInGiveaway(req, res, giveawayId) {
+  const currentLoggedInUser = req.user
+
+  // check if logged user is already in giveaway
+  let isUserAlreadyInGiveaway = false
+  const foundGiveaway = await Giveaway.findOne({generatedId: giveawayId}).exec()
+  isUserAlreadyInGiveaway = foundGiveaway.enrolled_users.includes(currentLoggedInUser._id)
+
+  if (!isUserAlreadyInGiveaway) {
+    await Giveaway.findOneAndUpdate({generatedId: giveawayId}, {
+      $push: { enrolled_users: currentLoggedInUser._id }
+    })
+  } else {
+    throw Error('already enrolled')
+  }
+}
+
 module.exports = {
   createGiveaway,
   scheduleGiveaway,
   getGiveaways,
-  getGiveaway
+  getGiveaway,
+  enrollUserInGiveaway
 }

@@ -7,7 +7,7 @@ async function httpGetCurrentUser(req, res) {
   _.unset(currentUser, 'password')
 
   if (currentUser) {
-    return res.status(200).json({ currentUser })
+    return res.status(200).json({user: currentUser})
   } else {
     return res.status(400)
   }

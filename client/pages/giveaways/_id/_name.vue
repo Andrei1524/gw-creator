@@ -1,19 +1,26 @@
 <template>
-  <b-container fluid class='mt-4'>
+  <b-container v-if='giveaway' fluid class='mt-4'>
     <div class='giveaway'>
       <b-row>
         <b-col cols='12' md='5'>
           <div class='giveaway-info'>
             <img class='w-100 gw-img' :src="require('@/assets/images/gw_background_default.PNG')" alt=''>
             <p class='description mt-3'>{{ giveaway.description }}</p>
-            <b-button class='custom-btn enroll font-weight-bolder' type="submit" variant="primary">
+            <b-button class='custom-btn enroll font-weight-bolder' type="submit" variant="primary" @click="handleEnrollInGiveaway">
               <b-spinner v-show='loadingEnroll' small type="grow"></b-spinner>
               <b-icon
+                v-if='handleCheckIfEnrolled()'
+                icon="check-circle-fill"
+                aria-hidden="true"
+                style="width: 26px; height: 26px;"
+              ></b-icon>
+              <b-icon
+                v-else
                 icon="arrow-up-right-circle-fill"
                 aria-hidden="true"
                 style="width: 26px; height: 26px;"
               ></b-icon>
-              ENROLL
+              {{ handleComputeEnrollText() }}
             </b-button>
 
           <!-- ENROLLED USERS TABLE -->
@@ -72,7 +79,7 @@ export default {
 
   data() {
     return {
-      giveaway: {},
+      giveaway: null,
       searchEnrolled: '',
       loadingEnroll: false,
       computeTimeLeft
@@ -100,7 +107,20 @@ export default {
       setComponentToShow: 'setComponentToShow'
     }),
 
-    ...mapActions('modules/giveaways', ['getGiveaway']),
+    ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway']),
+
+    async handleEnrollInGiveaway() {
+      await this.enrollInGiveaway(this.giveaway.generatedId)
+      this.giveaway = await this.getGiveaway(this.$route.params.id)
+    },
+
+    handleCheckIfEnrolled() {
+      return this.giveaway.enrolled_users.includes(this.$auth.user._id)
+    },
+
+    handleComputeEnrollText() {
+      return this.handleCheckIfEnrolled() ? 'ENROLLED' : 'ENROLL'
+    },
 
     handleComputeTimeLeft() {
       return computeTimeLeft(this.giveaway.end_date)

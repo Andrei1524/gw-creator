@@ -26,7 +26,16 @@ export const actions = {
     } catch (err) {
       showAlert(commit, err, 'warning')
     }
-  }
+  },
+
+  async enrollInGiveaway({ commit }, generatedId) {
+    try {
+      const response = await this.$axios.post(`/giveaways/${generatedId}/enroll`)
+      showAlert(commit, response.data, 'success')
+    } catch (err) {
+      showAlert(commit, err, 'warning')
+    }
+  },
 }
 
 export const mutations = {

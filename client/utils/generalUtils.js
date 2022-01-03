@@ -7,6 +7,5 @@ export const friendlyUrl = (url) => {
 }
 
 export const computeTimeLeft = (endDate) => {
-  console.log(endDate)
   return dayjs(endDate).fromNow()
 }
