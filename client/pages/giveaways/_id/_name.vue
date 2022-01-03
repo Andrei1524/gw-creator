@@ -30,7 +30,7 @@
                     ></b-form-input>
                   </b-col>
                   <b-col cols="4" class='d-flex align-items-center justify-content-end'>
-                    <h6 class='font-size-14'>12 days left</h6>
+                    <h6 class='font-size-14'>{{ handleComputeTimeLeft() }}</h6>
                     <div class='status-icon ml-3'>
                       <b-icon
                         v-if="giveaway.status === 'closed'"
@@ -64,6 +64,7 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex'
+import { computeTimeLeft } from '~/utils/generalUtils'
 
 export default {
   name: "GiveawayPage",
@@ -73,7 +74,8 @@ export default {
     return {
       giveaway: {},
       searchEnrolled: '',
-      loadingEnroll: false
+      loadingEnroll: false,
+      computeTimeLeft
     }
   },
 
@@ -99,6 +101,10 @@ export default {
     }),
 
     ...mapActions('modules/giveaways', ['getGiveaway']),
+
+    handleComputeTimeLeft() {
+      return computeTimeLeft(this.giveaway.end_date)
+    }
   },
 }
 </script>
