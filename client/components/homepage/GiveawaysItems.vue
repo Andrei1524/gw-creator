@@ -1,20 +1,22 @@
 <template>
   <div>
     <b-spinner v-if='loading' class='loader-center' small type="grow"></b-spinner>
-    <div v-else class='giveaways-items'>
-      <NuxtLink v-for='giveaway in giveaways' :key='giveaway.id' :to="`giveaways/${giveaway.generatedId}/${friendlyUrl(giveaway.giveaway_name)}`">
-        <GiveawayItem :giveaway='giveaway' />
-      </NuxtLink>
+    <div v-else class='giveaway-items-wrapper'>
+      <div class='giveaways-items'>
+        <NuxtLink v-for='giveaway in giveaways' :key='giveaway.id' :to="`giveaways/${giveaway.generatedId}/${friendlyUrl(giveaway.giveaway_name)}`">
+          <GiveawayItem :giveaway='giveaway' />
+        </NuxtLink>
+      </div>
+      <b-pagination
+        v-model="currentPage"
+        class='mt-2'
+        :total-rows="rows"
+        :per-page="perPage"
+        aria-controls="my-table"
+        size='md'
+        @input='handleGetGiveaways()'
+      ></b-pagination>
     </div>
-    <b-pagination
-      v-model="currentPage"
-      class='mt-2'
-      :total-rows="rows"
-      :per-page="perPage"
-      aria-controls="my-table"
-      size='md'
-      @input='handleGetGiveaways()'
-    ></b-pagination>
   </div>
 </template>
 

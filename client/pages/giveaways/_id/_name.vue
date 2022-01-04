@@ -72,16 +72,16 @@
                       <h6>{{ enrolledUser.username }}</h6>
                     </div>
                   </div>
+                  <b-pagination
+                    v-model="currentPage"
+                    class='mt-2'
+                    :total-rows="rows"
+                    :per-page="perPage"
+                    aria-controls="my-table"
+                    size='md'
+                    @input='handleGetEnrolledUsers'
+                  ></b-pagination>
                 </div>
-                <b-pagination
-                  v-model="currentPage"
-                  class='mt-2'
-                  :total-rows="rows"
-                  :per-page="perPage"
-                  aria-controls="my-table"
-                  size='md'
-                  @input='handleGetEnrolledUsers'
-                ></b-pagination>
               </div>
             </div>
           </div>
