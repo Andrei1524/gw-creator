@@ -19,7 +19,10 @@
         >
           <!-- admin dropdown-->
           <b-nav-item-dropdown v-if="$auth.user.level === 'owner'" text="TEST" right>
-            <b-dropdown-item @click='handleCreateTestGiveaway'>CREATE GIVEAWAY</b-dropdown-item>
+            <b-spinner v-if='loadingCreateTestGiveaway' small type="grow"></b-spinner>
+            <b-dropdown-item v-else @click='handleCreateTestGiveaway'>
+              CREATE GIVEAWAY
+            </b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-nav-item to='/giveaways/create' class="special-nav-item">
@@ -71,7 +74,9 @@ import { mapActions } from 'vuex'
 
 export default {
   data() {
-    return {}
+    return {
+      loadingCreateTestGiveaway: false
+    }
   },
 
   methods: {
@@ -86,7 +91,9 @@ export default {
     },
 
     async handleCreateTestGiveaway() {
+      this.loadingCreateTestGiveaway = true
       await this.createTestGiveaway()
+      this.loadingCreateTestGiveaway = false
     }
   },
 }
