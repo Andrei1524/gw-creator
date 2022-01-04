@@ -137,8 +137,11 @@ export default {
     ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers']),
 
     async handleEnrollInGiveaway() {
-      await this.enrollInGiveaway(this.giveaway.generatedId)
-      this.giveaway = await this.getGiveaway(this.$route.params.id)
+      if (!this.handleCheckIfEnrolled()) {
+        await this.enrollInGiveaway(this.giveaway.generatedId)
+        this.giveaway = await this.getGiveaway(this.$route.params.id)
+        await this.handleGetEnrolledUsers()
+      }
     },
 
     async handleGetEnrolledUsers() {

@@ -39,8 +39,7 @@ export const actions = {
 
   async getGiveawayEnrolledUsers({ commit }, payload) {
     try {
-      const response = await this.$axios.get(`/giveaways/${payload.generatedId}/enrolled_users${payload.computedQueries}`)
-      return response
+      return await this.$axios.get(`/giveaways/${payload.generatedId}/enrolled_users${payload.computedQueries}`)
     } catch (err) {
       showAlert(commit, err, 'warning')
     }
