@@ -78,8 +78,24 @@ async function enrollUserInGiveaway(req, res, generatedId) {
   }
 }
 
-async function getGiveawayEnrolledUsers(req, res, generatedId) {
-  const foundGiveaway = await Giveaway.findOne({generatedId}).populate('enrolled_users', ['-password', '-refreshToken', '-email'],).lean().exec()
+async function getGiveawayEnrolledUsers(req, res, generatedId, page) {
+  if (!page) throw  Error('page is required')
+  if (page <= 0) page = 1
+
+  const skip = (page - 1) * PAGE_SIZE
+
+  const foundGiveaway = await Giveaway.findOne({generatedId})
+    .populate([{
+      path: 'enrolled_users',
+      select: ['-password', '-refreshToken', '-email'],
+      model: 'User',
+      options: {
+        skip: skip,
+        limit : PAGE_SIZE
+      },
+    }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
+    .lean()
+    .exec()
   return foundGiveaway.enrolled_users
 }
 

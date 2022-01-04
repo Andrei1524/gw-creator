@@ -49,8 +49,22 @@ async function httpEnrollInGiveaway(req, res) {
 
 async function httpGetEnrolledUsers(req, res) {
   try {
-    const enrolledUsers = await getGiveawayEnrolledUsers(req, res, req.params.id)
-    res.status(200).json(enrolledUsers)
+    const { page } = req.query
+    // set pagination settings
+    const enrolled_users = await getGiveawayEnrolledUsers(req, res, req.params.id, page)
+    const foundGiveaway = await Giveaway.findOne({generatedId: req.params.id})
+      .populate([{
+        path: 'enrolled_users',
+        select: ['-password', '-refreshToken', '-email'],
+        model: 'User',
+      }])
+      .lean()
+      .exec()
+    const total_items = foundGiveaway.enrolled_users.length
+
+    res.status(200).json({
+      enrolled_users, total_items, PAGE_SIZE
+    })
   } catch (err) {
     return res.status(422).json({error: err.message})
   }

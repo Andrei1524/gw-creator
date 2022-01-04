@@ -65,6 +65,15 @@
                     <h6>{{ enrolledUser.username }}</h6>
                   </div>
                 </div>
+                <b-pagination
+                  v-model="currentPage"
+                  class='mt-2'
+                  :total-rows="rows"
+                  :per-page="perPage"
+                  aria-controls="my-table"
+                  size='md'
+                  @input='handleGetEnrolledUsers'
+                ></b-pagination>
               </div>
             </div>
           </div>
@@ -88,6 +97,9 @@ export default {
 
   data() {
     return {
+      currentPage: 1,
+      perPage: 0,
+      rows: 0,
       giveaway: null,
       enrolled_users: [],
       searchEnrolled: '',
@@ -98,7 +110,7 @@ export default {
 
   async fetch() {
     this.giveaway = await this.getGiveaway(this.$route.params.id)
-    this.enrolled_users = await this.getGiveawayEnrolledUsers(this.giveaway.generatedId)
+    await this.handleGetEnrolledUsers()
   },
 
   watch: {
@@ -123,6 +135,20 @@ export default {
     async handleEnrollInGiveaway() {
       await this.enrollInGiveaway(this.giveaway.generatedId)
       this.giveaway = await this.getGiveaway(this.$route.params.id)
+    },
+
+    async handleGetEnrolledUsers() {
+      // this.loading = true
+      const computedQueries = `?page=${this.currentPage}`
+      const payload = {
+        generatedId: this.giveaway.generatedId,
+        computedQueries
+      }
+      const response = await this.getGiveawayEnrolledUsers(payload)
+      this.enrolled_users = response.data.enrolled_users
+      this.perPage = response.data.PAGE_SIZE
+      this.rows = response.data.total_items
+      // this.loading = false
     },
 
     handleCheckIfEnrolled() {
