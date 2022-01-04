@@ -45,7 +45,7 @@ async function scheduleGiveaway(giveaway) {
 }
 
 async function getGiveaways(req, res, page) {
-  if (!page) throw  Error('page is required')
+  if (!page) throw  Error('page is required') // TODO: refactor this repetition on pagination
   if (page <= 0) page = 1
 
   const skip = (page - 1) * PAGE_SIZE
@@ -79,7 +79,7 @@ async function enrollUserInGiveaway(req, res, generatedId) {
 }
 
 async function getGiveawayEnrolledUsers(req, res, generatedId, page) {
-  if (!page) throw  Error('page is required')
+  if (!page) throw  Error('page is required') // TODO: refactor this repetition on pagination
   if (page <= 0) page = 1
 
   const skip = (page - 1) * PAGE_SIZE

@@ -58,11 +58,14 @@
               </div>
               <hr class="white-hr mt-2" />
 
-              <div class='table mb-2'>
-                <div v-for='enrolledUser in enrolled_users' :key='enrolledUser._id' class='enrolled-user d-flex align-items-center'>
-                  <span class='enrolled-user-nr'>1</span>
-                  <div class='info pl-2'>
-                    <h6>{{ enrolledUser.username }}</h6>
+              <div class='table-wrapper mb-2'>
+                <b-spinner v-if='loadingTable' class='loader-center' small type="grow"></b-spinner>
+                <div v-else class='table'>
+                  <div v-for='(enrolledUser, index) in enrolled_users' :key='enrolledUser._id' class='enrolled-user d-flex align-items-center'>
+                    <span class='enrolled-user-nr'>{{ index }}</span>
+                    <div class='info pl-2'>
+                      <h6>{{ enrolledUser.username }}</h6>
+                    </div>
                   </div>
                 </div>
                 <b-pagination
@@ -104,6 +107,7 @@ export default {
       enrolled_users: [],
       searchEnrolled: '',
       loadingEnroll: false,
+      loadingTable: false,
       computeTimeLeft
     }
   },
@@ -138,7 +142,7 @@ export default {
     },
 
     async handleGetEnrolledUsers() {
-      // this.loading = true
+      this.loadingTable = true
       const computedQueries = `?page=${this.currentPage}`
       const payload = {
         generatedId: this.giveaway.generatedId,
@@ -148,7 +152,7 @@ export default {
       this.enrolled_users = response.data.enrolled_users
       this.perPage = response.data.PAGE_SIZE
       this.rows = response.data.total_items
-      // this.loading = false
+      this.loadingTable = false
     },
 
     handleCheckIfEnrolled() {
@@ -199,16 +203,19 @@ export default {
   border-radius: 20px;
 }
 
-.table {
+.table-wrapper {
   .enrolled-user {
     background: $black;
     margin-top: 2px;
   }
 
   .enrolled-user-nr {
-    background: $black-blue;
-    padding: 5px 8px;
+    background: #333F44;
+    width: 30px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-
 }
 </style>
