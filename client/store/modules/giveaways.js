@@ -36,6 +36,15 @@ export const actions = {
       showAlert(commit, err, 'warning')
     }
   },
+
+  async getGiveawayEnrolledUsers({ commit }, generatedId) {
+    try {
+      const response = await this.$axios.get(`/giveaways/${generatedId}/enrolled_users`)
+      return response.data
+    } catch (err) {
+      showAlert(commit, err, 'warning')
+    }
+  },
 }
 
 export const mutations = {

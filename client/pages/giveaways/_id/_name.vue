@@ -84,6 +84,7 @@ export default {
   data() {
     return {
       giveaway: null,
+      enrolled_users: [],
       searchEnrolled: '',
       loadingEnroll: false,
       computeTimeLeft
@@ -92,6 +93,7 @@ export default {
 
   async fetch() {
     this.giveaway = await this.getGiveaway(this.$route.params.id)
+    this.enrolled_users = await this.getGiveawayEnrolledUsers(this.giveaway.generatedId)
   },
 
   watch: {
@@ -111,7 +113,7 @@ export default {
       setComponentToShow: 'setComponentToShow'
     }),
 
-    ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway']),
+    ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers']),
 
     async handleEnrollInGiveaway() {
       await this.enrollInGiveaway(this.giveaway.generatedId)
