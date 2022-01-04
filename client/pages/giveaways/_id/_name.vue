@@ -6,7 +6,12 @@
           <div class='giveaway-info'>
             <img class='w-100 gw-img' :src="require('@/assets/images/gw_background_default.PNG')" alt=''>
             <p class='description mt-3'>{{ giveaway.description }}</p>
-            <b-button class='custom-btn enroll font-weight-bolder' type="submit" variant="primary" @click="handleEnrollInGiveaway">
+            <b-button
+              v-if="$auth.user"
+              class='custom-btn enroll font-weight-bolder' type="submit"
+              variant="primary"
+              @click="handleEnrollInGiveaway"
+            >
               <b-spinner v-show='loadingEnroll' small type="grow"></b-spinner>
               <b-icon
                 v-if='handleCheckIfEnrolled()'
@@ -159,7 +164,9 @@ export default {
     },
 
     handleCheckIfEnrolled() {
-      return this.giveaway.enrolled_users.includes(this.$auth.user._id)
+      if (this.$auth.user !== null) {
+        return this.giveaway.enrolled_users.includes(this.$auth.user._id)
+      }
     },
 
     handleComputeEnrollText() {
