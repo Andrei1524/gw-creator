@@ -61,12 +61,12 @@ async function getGiveaway(req, res, generatedId) {
   return await Giveaway.findOne({generatedId}).lean().exec()
 }
 
-async function enrollUserInGiveaway(req, res, giveawayId) {
+async function enrollUserInGiveaway(req, res, generatedId) {
   const currentLoggedInUser = req.user
 
   // check if logged user is already in giveaway
   let isUserAlreadyInGiveaway = false
-  const foundGiveaway = await Giveaway.findOne({generatedId: giveawayId}).exec()
+  const foundGiveaway = await Giveaway.findOne({generatedId}).exec()
   isUserAlreadyInGiveaway = foundGiveaway.enrolled_users.includes(currentLoggedInUser._id)
 
   if (!isUserAlreadyInGiveaway) {
@@ -78,10 +78,16 @@ async function enrollUserInGiveaway(req, res, giveawayId) {
   }
 }
 
+async function getGiveawayEnrolledUsers(req, res, generatedId) {
+  const foundGiveaway = await Giveaway.findOne({generatedId}).populate('enrolled_users', ['-password', '-refreshToken', '-email'],).lean().exec()
+  return foundGiveaway.enrolled_users
+}
+
 module.exports = {
   createGiveaway,
   scheduleGiveaway,
   getGiveaways,
   getGiveaway,
-  enrollUserInGiveaway
+  enrollUserInGiveaway,
+  getGiveawayEnrolledUsers
 }

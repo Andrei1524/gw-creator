@@ -1,7 +1,7 @@
 let _ = require('lodash');
 const { PAGE_SIZE } = require('../../config')
 
-const { createGiveaway, getGiveaways, getGiveaway, enrollUserInGiveaway } = require('../../models/giveaways/giveaway.model')
+const { createGiveaway, getGiveaways, getGiveaway, enrollUserInGiveaway, getGiveawayEnrolledUsers } = require('../../models/giveaways/giveaway.model')
 const Giveaway = require('../../models/giveaways/giveaway.mongo')
 
 async function httpCreateGiveaway(req, res) {
@@ -47,9 +47,19 @@ async function httpEnrollInGiveaway(req, res) {
   }
 }
 
+async function httpGetEnrolledUsers(req, res) {
+  try {
+    const enrolledUsers = await getGiveawayEnrolledUsers(req, res, req.params.id)
+    res.status(200).json(enrolledUsers)
+  } catch (err) {
+    return res.status(422).json({error: err.message})
+  }
+}
+
 module.exports = {
   httpCreateGiveaway,
   httpGetGiveaways,
   httpGetGiveaway,
-  httpEnrollInGiveaway
+  httpEnrollInGiveaway,
+  httpGetEnrolledUsers
 }

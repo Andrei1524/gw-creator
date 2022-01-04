@@ -57,6 +57,10 @@
                 </b-row>
               </div>
               <hr class="white-hr mt-2" />
+
+              <div class='table'>
+                table
+              </div>
             </div>
           </div>
         </b-col>
