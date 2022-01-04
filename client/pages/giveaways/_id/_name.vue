@@ -58,8 +58,13 @@
               </div>
               <hr class="white-hr mt-2" />
 
-              <div class='table'>
-                table
+              <div class='table mb-2'>
+                <div v-for='enrolledUser in enrolled_users' :key='enrolledUser._id' class='enrolled-user d-flex align-items-center'>
+                  <span class='enrolled-user-nr'>1</span>
+                  <div class='info pl-2'>
+                    <h6>{{ enrolledUser.username }}</h6>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -166,5 +171,18 @@ export default {
   border: none;
   color: #fff;
   border-radius: 20px;
+}
+
+.table {
+  .enrolled-user {
+    background: $black;
+    margin-top: 2px;
+  }
+
+  .enrolled-user-nr {
+    background: $black-blue;
+    padding: 5px 8px;
+  }
+
 }
 </style>

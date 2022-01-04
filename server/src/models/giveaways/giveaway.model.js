@@ -70,7 +70,7 @@ async function enrollUserInGiveaway(req, res, generatedId) {
   isUserAlreadyInGiveaway = foundGiveaway.enrolled_users.includes(currentLoggedInUser._id)
 
   if (!isUserAlreadyInGiveaway) {
-    await Giveaway.findOneAndUpdate({generatedId: giveawayId}, {
+    await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
       $push: { enrolled_users: currentLoggedInUser._id }
     })
   } else {

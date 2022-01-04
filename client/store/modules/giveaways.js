@@ -45,6 +45,16 @@ export const actions = {
       showAlert(commit, err, 'warning')
     }
   },
+
+  // TESTING FUNCTIONS
+  async createTestGiveaway({ commit }, payload) {
+    try {
+      const response = await this.$axios.post('/giveaways/create_test_giveaway')
+      showAlert(commit, response.data, 'success')
+    } catch (err) {
+      showAlert(commit, err, 'warning')
+    }
+  },
 }
 
 export const mutations = {
