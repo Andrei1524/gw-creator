@@ -42,6 +42,8 @@ const giveawaySchema = new mongoose.Schema({
     required: true
   },
 
+  enrolled_users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
   nr_of_winners: {
     type: Number,
     required: true

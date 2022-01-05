@@ -45,7 +45,7 @@ async function scheduleGiveaway(giveaway) {
 }
 
 async function getGiveaways(req, res, page) {
-  if (!page) throw  Error('page is required')
+  if (!page) throw  Error('page is required') // TODO: refactor this repetition on pagination
   if (page <= 0) page = 1
 
   const skip = (page - 1) * PAGE_SIZE
@@ -61,9 +61,49 @@ async function getGiveaway(req, res, generatedId) {
   return await Giveaway.findOne({generatedId}).lean().exec()
 }
 
+async function enrollUserInGiveaway(req, res, generatedId) {
+  const currentLoggedInUser = req.user
+
+  // check if logged user is already in giveaway
+  let isUserAlreadyInGiveaway = false
+  const foundGiveaway = await Giveaway.findOne({generatedId}).exec()
+  isUserAlreadyInGiveaway = foundGiveaway.enrolled_users.includes(currentLoggedInUser._id)
+
+  if (!isUserAlreadyInGiveaway) {
+    await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
+      $push: { enrolled_users: currentLoggedInUser._id }
+    })
+  } else {
+    throw Error('already enrolled')
+  }
+}
+
+async function getGiveawayEnrolledUsers(req, res, generatedId, page) {
+  if (!page) throw  Error('page is required') // TODO: refactor this repetition on pagination
+  if (page <= 0) page = 1
+
+  const skip = (page - 1) * PAGE_SIZE
+
+  const foundGiveaway = await Giveaway.findOne({generatedId})
+    .populate([{
+      path: 'enrolled_users',
+      select: ['-password', '-refreshToken', '-email'],
+      model: 'User',
+      options: {
+        skip: skip,
+        limit : PAGE_SIZE
+      },
+    }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
+    .lean()
+    .exec()
+  return foundGiveaway.enrolled_users
+}
+
 module.exports = {
   createGiveaway,
   scheduleGiveaway,
   getGiveaways,
-  getGiveaway
+  getGiveaway,
+  enrollUserInGiveaway,
+  getGiveawayEnrolledUsers
 }

@@ -17,6 +17,14 @@
           v-if="$auth.loggedIn"
           class="ml-auto d-flex align-items-center"
         >
+          <!-- admin dropdown-->
+          <b-nav-item-dropdown v-if="$auth.user.level === 'owner'" text="TEST" right>
+            <b-spinner v-if='loadingCreateTestGiveaway' small type="grow"></b-spinner>
+            <b-dropdown-item v-else @click='handleCreateTestGiveaway'>
+              CREATE GIVEAWAY
+            </b-dropdown-item>
+          </b-nav-item-dropdown>
+
           <b-nav-item to='/giveaways/create' class="special-nav-item">
             <b-icon icon="gift" aria-hidden="true"></b-icon>
             Create
@@ -62,18 +70,30 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   data() {
-    return {}
+    return {
+      loadingCreateTestGiveaway: false
+    }
   },
 
   methods: {
+    ...mapActions('modules/giveaways', ['createTestGiveaway']),
+
     async logout() {
       await this.$auth.logout({
         data: {
           refresh_token: this.$auth.strategy.refreshToken.get()
         }
       })
+    },
+
+    async handleCreateTestGiveaway() {
+      this.loadingCreateTestGiveaway = true
+      await this.createTestGiveaway()
+      this.loadingCreateTestGiveaway = false
     }
   },
 }
