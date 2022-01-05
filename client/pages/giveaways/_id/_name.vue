@@ -28,6 +28,19 @@
               ></b-icon>
               {{ handleComputeEnrollText() }}
             </b-button>
+            <b-button
+              v-else
+              class='custom-btn enroll font-weight-bolder' type="submit"
+              variant="primary"
+              @click="handleEnrollInGiveaway"
+            >
+              <b-icon
+                icon="arrow-up-right-circle-fill"
+                aria-hidden="true"
+                style="width: 26px; height: 26px;"
+              ></b-icon>
+              ENROLL
+            </b-button>
 
           <!-- ENROLLED USERS TABLE -->
             <div class='enrolled-table mt-3'>
@@ -99,6 +112,7 @@
 <script>
 import { mapActions, mapMutations } from 'vuex'
 import { computeTimeLeft } from '~/utils/generalUtils'
+import { showAlert } from '~/utils/showAlert'
 
 export default {
   name: "GiveawayPage",
@@ -143,6 +157,12 @@ export default {
     ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers']),
 
     async handleEnrollInGiveaway() {
+      // check if user is logged in
+      if (!this.$auth.user) {
+        showAlert(this.$store.commit, 'You need to log in!', 'warning')
+        return
+      }
+
       if (!this.handleCheckIfEnrolled() && this.handleCheckIfGiveawayIsOpen()) {
         await this.enrollInGiveaway(this.giveaway.generatedId)
         this.giveaway = await this.getGiveaway(this.$route.params.id)

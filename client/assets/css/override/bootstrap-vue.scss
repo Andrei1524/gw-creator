@@ -144,6 +144,14 @@ btn:focus, a:focus {
   }
 }
 
+.btn-primary.disabled, .btn-primary:disabled {
+  background-color: $black-blue;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: $warm-red;
+}
+
 .btn-error {
   background: #dc3545;
 
