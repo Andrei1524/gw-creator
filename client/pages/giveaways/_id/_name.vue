@@ -8,6 +8,7 @@
             <p class='description mt-3'>{{ giveaway.description }}</p>
             <b-button
               v-if="$auth.user"
+              :disabled='!handleCheckIfGiveawayIsOpen() || handleCheckIfEnrolled()'
               class='custom-btn enroll font-weight-bolder' type="submit"
               variant="primary"
               @click="handleEnrollInGiveaway"
@@ -142,7 +143,7 @@ export default {
     ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers']),
 
     async handleEnrollInGiveaway() {
-      if (!this.handleCheckIfEnrolled()) {
+      if (!this.handleCheckIfEnrolled() && this.handleCheckIfGiveawayIsOpen()) {
         await this.enrollInGiveaway(this.giveaway.generatedId)
         this.giveaway = await this.getGiveaway(this.$route.params.id)
         await this.handleGetEnrolledUsers()
@@ -167,6 +168,10 @@ export default {
       if (this.$auth.user !== null) {
         return this.giveaway.enrolled_users.includes(this.$auth.user._id)
       }
+    },
+
+    handleCheckIfGiveawayIsOpen() {
+      return this.giveaway.status === 'open'
     },
 
     handleComputeEnrollText() {
