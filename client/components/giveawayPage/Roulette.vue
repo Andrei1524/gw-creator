@@ -54,12 +54,14 @@ export default {
     },
 
     initCanvas() {
-      // const btn = document.getElementById('pick_winner')
+      const btn = document.getElementById('pick_winner')
       const canvas = document.getElementById("c")
       const ctx = canvas.getContext('2d');
 
       canvas.width = document.querySelector('.roulette').getBoundingClientRect().width
       canvas.height = 75
+
+      let isDrawWinnerClicked = false
 
       const nrOfEnrolled = 25
       const rectWidth = 75
@@ -67,12 +69,13 @@ export default {
       let startRectX = 0
 
       let xRollLeft = 0
-      const animationSpeed = 1;
+      const animationSpeed = 50;
 
       const rects = []
       function generateRects() {
         for (let i = 0; i < nrOfEnrolled; i++) {
           rects.push({
+            id: i,
             x: startRectX
           })
           startRectX += rectWidth + gap
@@ -86,12 +89,29 @@ export default {
         }
       }
 
+      // pick winner funct
+      function drawWinner() {
+        isDrawWinnerClicked = true
+
+        const randomWinnerNr = Math.floor(Math.random() * (nrOfEnrolled + 1)); // TODO: stop the wheel on the winner
+        const winnerIndexInRects = rects.findIndex(rect => rect.id === randomWinnerNr)
+        console.log(winnerIndexInRects)
+
+        // get the rect X position
+        // then slowly stop the wheel on winner rect
+      }
+
+      // on btn click
+      btn.addEventListener('click', drawWinner)
+
       function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        xRollLeft -= animationSpeed
-
         drawRects()
+
+        if (isDrawWinnerClicked) {
+          xRollLeft -= animationSpeed
+        }
 
         window.requestAnimationFrame(update)
       }
