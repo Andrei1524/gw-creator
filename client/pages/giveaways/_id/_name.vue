@@ -102,7 +102,7 @@
         </b-col>
 
         <b-col cols='12' md='7'>
-          <div class='giveaway-roulette'>roulette</div>
+          <Roulette />
         </b-col>
       </b-row>
     </div>
@@ -113,9 +113,11 @@
 import { mapActions, mapMutations } from 'vuex'
 import { computeTimeLeft } from '~/utils/generalUtils'
 import { showAlert } from '~/utils/showAlert'
+import Roulette from '~/components/giveawayPage/Roulette'
 
 export default {
   name: "GiveawayPage",
+  components: { Roulette },
   layout: 'SplitLayout',
 
   data() {
