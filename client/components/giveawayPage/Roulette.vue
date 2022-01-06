@@ -1,6 +1,7 @@
 <template>
   <div class='roulette'>
     <canvas id="c"></canvas>
+    <button id='pick_winner'>pick winner</button>
   </div>
 </template>
 
@@ -19,6 +20,14 @@ export default {
     }
   },
 
+  data() {
+    return {
+      requestAnimationFrame: null,
+      cancelAnimationFrame: null,
+      id: null
+    }
+  },
+
   mounted() {
     // init socket
     this.socket = this.$nuxtSocket({
@@ -32,6 +41,11 @@ export default {
     this.initCanvas()
   },
 
+  destroyed() {
+    window.cancelAnimationFrame(this.id);
+    this.id = undefined;
+  },
+
   methods: {
     onConnect() {
       this.socket.on('connect', () => {
@@ -40,41 +54,49 @@ export default {
     },
 
     initCanvas() {
-      const c = document.getElementById("c")
-      c.width = document.querySelector('.roulette').getBoundingClientRect().width
-      c.height = 75
-      // game loop
-      // let spinTime = 0
-      // let spinTimeTotal = 0
+      // const btn = document.getElementById('pick_winner')
+      const canvas = document.getElementById("c")
+      const ctx = canvas.getContext('2d');
 
-      function init() {
-        window.requestAnimationFrame(draw);
-      }
+      canvas.width = document.querySelector('.roulette').getBoundingClientRect().width
+      canvas.height = 75
 
-      // config
       const nrOfEnrolled = 25
-      const squareWidth = 75
+      const rectWidth = 75
       const gap = 5
-      let startWidthSteps = 0
+      let startRectX = 0
 
-      // rect functions
-      const drawRect = (ctx, x) => {
-        ctx.rect(x, 0, squareWidth, 80);
-        ctx.fill()
-      }
+      let xRollLeft = 0
+      const animationSpeed = 1;
 
-      function draw() {
-        const ctx = c.getContext("2d")
-        ctx.clearRect(0, 0, c.getBoundingClientRect().width, 80)
-
+      const rects = []
+      function generateRects() {
         for (let i = 0; i < nrOfEnrolled; i++) {
-          drawRect(ctx, startWidthSteps)
-          startWidthSteps += squareWidth + gap
+          rects.push({
+            x: startRectX
+          })
+          startRectX += rectWidth + gap
         }
-        window.requestAnimationFrame(draw);
+      }
+      generateRects()
+
+      function drawRects() {
+        for (let i = 0; i < rects.length; i++) {
+          ctx.strokeRect(rects[i].x + xRollLeft, 0, rectWidth, 75)
+        }
       }
 
-      init();
+      function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        xRollLeft -= animationSpeed
+
+        drawRects()
+
+        window.requestAnimationFrame(update)
+      }
+
+      update()
     }
   }
 }
