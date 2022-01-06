@@ -13,7 +13,7 @@ const socketServer = io(httpServer, {
   }
 })
 
-const sockets = require('./sockets')
+const sockets = require('./sockets/sockets.js')
 const PORT = process.env.PORT || 3000
 
 async function startServer() { // putem folosi asta oricand avem nevoie sa facem ceva task inainte sa porneasca serverul

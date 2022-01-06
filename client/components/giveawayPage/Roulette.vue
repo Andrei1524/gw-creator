@@ -11,6 +11,32 @@
 // establish connection with the server | add some loader
 
 export default {
-  name: 'Roulette'
+  name: 'Roulette',
+  props: {
+    generatedId: {
+      type: String,
+      required: true
+    }
+  },
+
+  mounted() {
+    // init socket
+    this.socket = this.$nuxtSocket({
+      name: 'home',
+      channel: '/giveaway',
+      reconnection: true
+    })
+
+    // connect to the server
+    this.onConnect()
+  },
+
+  methods: {
+    onConnect() {
+      this.socket.on('connect', () => {
+        console.log('connected as: ', this.socket.id)
+      })
+    }
+  }
 }
 </script>
