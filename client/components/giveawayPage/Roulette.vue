@@ -42,6 +42,7 @@ export default {
     initCanvas() {
       const c = document.getElementById("c")
       c.width = document.querySelector('.roulette').getBoundingClientRect().width
+      c.height = 75
       // game loop
       // let spinTime = 0
       // let spinTimeTotal = 0
@@ -50,12 +51,26 @@ export default {
         window.requestAnimationFrame(draw);
       }
 
+      // config
+      const nrOfEnrolled = 25
+      const squareWidth = 75
+      const gap = 5
+      let startWidthSteps = 0
+
+      // rect functions
+      const drawRect = (ctx, x) => {
+        ctx.rect(x, 0, squareWidth, 80);
+        ctx.fill()
+      }
+
       function draw() {
         const ctx = c.getContext("2d")
         ctx.clearRect(0, 0, c.getBoundingClientRect().width, 80)
 
-        ctx.rect(0, 0, 80, 80);
-        ctx.fill()
+        for (let i = 0; i < nrOfEnrolled; i++) {
+          drawRect(ctx, startWidthSteps)
+          startWidthSteps += squareWidth + gap
+        }
         window.requestAnimationFrame(draw);
       }
 
