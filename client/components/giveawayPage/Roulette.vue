@@ -1,6 +1,6 @@
 <template>
   <div class='roulette'>
-    roulette component
+    <canvas id="c"></canvas>
   </div>
 </template>
 
@@ -29,6 +29,7 @@ export default {
 
     // connect to the server
     this.onConnect()
+    this.initCanvas()
   },
 
   methods: {
@@ -36,7 +37,36 @@ export default {
       this.socket.on('connect', () => {
         console.log('connected as: ', this.socket.id)
       })
+    },
+
+    initCanvas() {
+      const c = document.getElementById("c")
+      c.width = document.querySelector('.roulette').getBoundingClientRect().width
+      // game loop
+      // let spinTime = 0
+      // let spinTimeTotal = 0
+
+      function init() {
+        window.requestAnimationFrame(draw);
+      }
+
+      function draw() {
+        const ctx = c.getContext("2d")
+        ctx.clearRect(0, 0, c.getBoundingClientRect().width, 80)
+
+        ctx.rect(0, 0, 80, 80);
+        ctx.fill()
+        window.requestAnimationFrame(draw);
+      }
+
+      init();
     }
   }
 }
 </script>
+
+<style lang='scss'>
+#c {
+  border: 1px solid black;
+}
+</style>
