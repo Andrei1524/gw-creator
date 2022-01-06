@@ -82,7 +82,7 @@ export default {
 
       function drawRects() {
         for (let i = 0; i < rects.length; i++) {
-          ctx.strokeRect(rects[i].x + xRollLeft, 0, rectWidth, 75)
+          ctx.fillRect(rects[i].x + xRollLeft, 0, rectWidth, 75)
         }
       }
 
