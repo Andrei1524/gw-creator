@@ -65,12 +65,20 @@ export default {
         .getBoundingClientRect().width;
       canvas.height = 75;
       const rects = [];
-      const nrOfEnrolled = 100;
+      const nrOfEnrolled = 25;
 
       // config
       const rectWidth = 75;
       const gap = 5;
       let startRectX = 0;
+
+      // line
+      const line = {
+        x: canvas.width / 2,
+        y: 0,
+        width: 5,
+        height: canvas.height
+      }
 
       // functions ===================
       function generateRects() {
@@ -114,7 +122,7 @@ export default {
         const randomWinnerNr = Math.floor(Math.random() * (nrOfEnrolled + 1)); // TODO: stop the wheel on the winner
         winnerRect = rects.find((rect) => rect.id === randomWinnerNr);
         const winnerIndex = rects.findIndex((rect) => rect.id === randomWinnerNr);
-        spinStart = winnerRect.x;
+        spinStart = winnerRect.x - (canvas.width / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1;
         rects[winnerIndex].isWinner = true;
       }
 
@@ -159,6 +167,12 @@ export default {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         drawRects();
+
+        // draw centered line
+        ctx.rect(line.x, line.y, line.width, line.height);
+        ctx.stroke();
+        ctx.fillStyle = "#fff";
+        ctx.fill();
       }
 
       drawRouletteWheel();
