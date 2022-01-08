@@ -24,7 +24,7 @@ export default {
     return {
       requestAnimationFrame: null,
       cancelAnimationFrame: null,
-      id: null
+      animFrameId: null
     }
   },
 
@@ -42,8 +42,8 @@ export default {
   },
 
   destroyed() {
-    window.cancelAnimationFrame(this.id);
-    this.id = undefined;
+    window.cancelAnimationFrame(this.animFrameId);
+    this.animFrameId = null
   },
 
   methods: {
@@ -54,69 +54,114 @@ export default {
     },
 
     initCanvas() {
-      const btn = document.getElementById('pick_winner')
-      const canvas = document.getElementById("c")
-      const ctx = canvas.getContext('2d');
+      const btn = document.getElementById("pick_winner");
+      const canvas = document.getElementById("c");
+      const ctx = canvas.getContext("2d");
 
-      canvas.width = document.querySelector('.roulette').getBoundingClientRect().width
-      canvas.height = 75
+      // const RouletteFunctions = require("./rouletteFunctions");
 
-      let isDrawWinnerClicked = false
+      canvas.width = document
+        .querySelector(".roulette")
+        .getBoundingClientRect().width;
+      canvas.height = 75;
+      const rects = [];
+      const nrOfEnrolled = 100;
 
-      const nrOfEnrolled = 25
-      const rectWidth = 75
-      const gap = 5
-      let startRectX = 0
+      // config
+      const rectWidth = 75;
+      const gap = 5;
+      let startRectX = 0;
 
-      let xRollLeft = 0
-      const animationSpeed = 50;
-
-      const rects = []
+      // functions ===================
       function generateRects() {
         for (let i = 0; i < nrOfEnrolled; i++) {
           rects.push({
             id: i,
             x: startRectX
-          })
-          startRectX += rectWidth + gap
+          });
+          startRectX += rectWidth + gap;
         }
       }
-      generateRects()
+      generateRects();
+
+      // ===================
+      let winnerRect = null;
+
+      // canvas code
+      let startWheelRoll = false;
+
+      // easing
+      let spinTime = 0;
+      let spinStart = 0;
+      let spinTimeTotal = 0;
+
+      //
+      let rollWithEase = 0;
 
       function drawRects() {
         for (let i = 0; i < rects.length; i++) {
-          ctx.fillRect(rects[i].x + xRollLeft, 0, rectWidth, 75)
+          if (!rects[i].isWinner) {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(rects[i].x + rollWithEase, 0, rectWidth, 75);
+          } else {
+            ctx.fillStyle = "#FF0000";
+            ctx.fillRect(rects[i].x + rollWithEase, 0, rectWidth, 75);
+          }
         }
       }
 
-      // pick winner funct
-      function drawWinner() {
-        isDrawWinnerClicked = true
-
+      function draw() {
         const randomWinnerNr = Math.floor(Math.random() * (nrOfEnrolled + 1)); // TODO: stop the wheel on the winner
-        const winnerIndexInRects = rects.findIndex(rect => rect.id === randomWinnerNr)
-        console.log(winnerIndexInRects)
-
-        // get the rect X position
-        // then slowly stop the wheel on winner rect
+        winnerRect = rects.find((rect) => rect.id === randomWinnerNr);
+        const winnerIndex = rects.findIndex((rect) => rect.id === randomWinnerNr);
+        spinStart = winnerRect.x;
+        rects[winnerIndex].isWinner = true;
       }
 
-      // on btn click
-      btn.addEventListener('click', drawWinner)
+      function spin() {
+        draw();
+        spinTimeTotal = winnerRect.x * 10; // control the length of the spinn
+        startWheelRoll = true;
+        rollWheel();
+      }
+      // =========================
+      btn.addEventListener("click", spin);
 
-      function update() {
+      function easeOutQuart(t, b, c, d) {
+        return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+      }
+      const rollWheel = () => {
+        if (startWheelRoll) {
+          spinTime += 30;
+
+          if (spinTime >= spinTimeTotal) {
+            console.log("stopped wheel", spinTimeTotal);
+
+            startWheelRoll = false;
+            window.cancelAnimationFrame(this.animFrameId);
+            this.animFrameId = null
+            return;
+          } else {
+            const rollTimeWithEase = easeOutQuart(
+              spinTime,
+              0,
+              spinStart,
+              spinTimeTotal
+            );
+            rollWithEase = -rollTimeWithEase;
+            drawRouletteWheel();
+          }
+        }
+        this.animFrameId = window.requestAnimationFrame(rollWheel)
+      }
+
+      function drawRouletteWheel() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        drawRects()
-
-        if (isDrawWinnerClicked) {
-          xRollLeft -= animationSpeed
-        }
-
-        window.requestAnimationFrame(update)
+        drawRects();
       }
 
-      update()
+      drawRouletteWheel();
     }
   }
 }
