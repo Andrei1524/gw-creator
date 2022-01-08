@@ -80,7 +80,7 @@ export default {
         height: canvas.height
       }
 
-      // functions ===================
+      // functions =================== // TODO: move code to server side
       function generateRects() {
         for (let i = 0; i < nrOfEnrolled; i++) {
           rects.push({
