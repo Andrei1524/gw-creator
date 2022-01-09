@@ -53,6 +53,7 @@ export default {
       })
     },
 
+
     initCanvas() {
       const btn = document.getElementById("pick_winner");
       const canvas = document.getElementById("c");
@@ -133,7 +134,10 @@ export default {
         rollWheel();
       }
       // =========================
-      btn.addEventListener("click", spin);
+      btn.addEventListener("click", () => {
+        spin()
+        this.socket.emit('spin')
+      });
 
       function easeOutQuart(t, b, c, d) {
         return -c * ((t = t / d - 1) * t * t * t - 1) + b;
@@ -163,7 +167,7 @@ export default {
         this.animFrameId = window.requestAnimationFrame(rollWheel)
       }
 
-      function drawRouletteWheel() {
+      const drawRouletteWheel = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         drawRects();
@@ -173,6 +177,9 @@ export default {
         ctx.stroke();
         ctx.fillStyle = "#fff";
         ctx.fill();
+
+        // emit ready event for the server
+        this.socket.emit("ready", this.generatedId)
       }
 
       drawRouletteWheel();

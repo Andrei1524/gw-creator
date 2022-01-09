@@ -1,3 +1,5 @@
+const Giveaway = require('../models/user.mongo')
+
 function listen(io) {
   const giveawayNameSpace = io.of('/giveaway')
   giveawayNameSpace.on('connection', (socket) => {
@@ -5,13 +7,15 @@ function listen(io) {
 
     console.log('user connected', socket.id)
 
-    // socket.on('ready', () => {
-    //   // canvas ready
-    // })
+    socket.on('ready', (generatedId) => {
+      // canvas ready
+      room = 'room_' + generatedId
+      socket.join(room)
+    })
 
-    // socket.on('ballMove', (ballData) => {
-    //   socket.to(room).emit('ballMove', ballData)
-    // })
+    socket.on('spin', () => {
+      // socket.to(room).emit('spin', )
+    })
 
     // socket.on('disconnect', (reason) => {
     //   console.log(`client ${socket.id} disconnected: ${reason}`)
