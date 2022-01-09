@@ -79,23 +79,35 @@ async function enrollUserInGiveaway(req, res, generatedId) {
 }
 
 async function getGiveawayEnrolledUsers(req, res, generatedId, page) {
-  if (!page) throw  Error('page is required') // TODO: refactor this repetition on pagination
   if (page <= 0) page = 1
 
   const skip = (page - 1) * PAGE_SIZE
 
-  const foundGiveaway = await Giveaway.findOne({generatedId})
-    .populate([{
-      path: 'enrolled_users',
-      select: ['-password', '-refreshToken', '-email'],
-      model: 'User',
-      options: {
-        skip: skip,
-        limit : PAGE_SIZE
-      },
-    }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
-    .lean()
-    .exec()
+  let foundGiveaway
+
+  if (page) {
+    foundGiveaway = await Giveaway.findOne({generatedId})
+      .populate([{
+        path: 'enrolled_users',
+        select: ['-password', '-refreshToken', '-email'],
+        model: 'User',
+        options: {
+          skip: skip,
+          limit : PAGE_SIZE
+        },
+      }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
+      .lean()
+      .exec()
+  } else {
+    foundGiveaway = await Giveaway.findOne({generatedId})
+      .populate([{
+        path: 'enrolled_users',
+        select: ['-password', '-refreshToken', '-email'],
+        model: 'User',
+      }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
+      .lean()
+      .exec()
+  }
   return foundGiveaway.enrolled_users
 }
 

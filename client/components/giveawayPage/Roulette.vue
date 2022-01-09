@@ -11,12 +11,20 @@
 // if there are no players left on the giveaway page, close the game loop on the server
 // establish connection with the server | add some loader
 
+import { mapActions } from 'vuex'
+
 export default {
   name: 'Roulette',
   props: {
     generatedId: {
       type: String,
       required: true
+    },
+
+    enrolledUsers: {
+      type: Array,
+      required: false,
+      default: () => []
     }
   },
 
@@ -24,11 +32,12 @@ export default {
     return {
       requestAnimationFrame: null,
       cancelAnimationFrame: null,
-      animFrameId: null
+      animFrameId: null,
+      enrolledUsersData: []
     }
   },
 
-  mounted() {
+  async mounted() {
     // init socket
     this.socket = this.$nuxtSocket({
       name: 'home',
@@ -37,6 +46,7 @@ export default {
     })
 
     // connect to the server
+    await this.getRandomUsersForDefaultWheel()
     this.onConnect()
     this.initCanvas()
   },
@@ -47,12 +57,22 @@ export default {
   },
 
   methods: {
+    ...mapActions('modules/giveaways', ['getGiveawayEnrolledUsers']),
+
     onConnect() {
       this.socket.on('connect', () => {
         console.log('connected as: ', this.socket.id)
       })
     },
 
+    async getRandomUsersForDefaultWheel() {
+      const payload = {
+        generatedId: this.generatedId,
+        computedQueries: ""
+      }
+      const response = await this.getGiveawayEnrolledUsers(payload)
+      this.enrolledUsersData = response.data.enrolled_users
+    },
 
     initCanvas() {
       const btn = document.getElementById("pick_winner");
@@ -66,7 +86,6 @@ export default {
         .getBoundingClientRect().width;
       canvas.height = 75;
       const rects = [];
-      const nrOfEnrolled = 25;
 
       // config
       const rectWidth = 75;
@@ -82,16 +101,17 @@ export default {
       }
 
       // functions =================== // TODO: move code to server side
-      function generateRects() {
-        for (let i = 0; i < nrOfEnrolled; i++) {
+      const generateDefaultRects = () => {
+        for (let i = 0; i < this.enrolledUsersData.length; i++) {
           rects.push({
             id: i,
-            x: startRectX
+            x: startRectX,
+            username: this.enrolledUsersData[i].username
           });
           startRectX += rectWidth + gap;
         }
       }
-      generateRects();
+      generateDefaultRects();
 
       // ===================
       let winnerRect = null;
@@ -111,16 +131,24 @@ export default {
         for (let i = 0; i < rects.length; i++) {
           if (!rects[i].isWinner) {
             ctx.fillStyle = "#000";
-            ctx.fillRect(rects[i].x + rollWithEase, 0, rectWidth, 75);
+            ctx.fillRect(rects[i].x + rollWithEase, 0, rectWidth, rectWidth);
+
+            ctx.fillStyle = 'white';
+            ctx.textAlign = "center";
+            ctx.fillText(`${rects[i].username}`, rects[i].x + rollWithEase + ctx.measureText(`${rects[i].username}`).width / 2, rectWidth / 2);
           } else {
             ctx.fillStyle = "#FF0000";
             ctx.fillRect(rects[i].x + rollWithEase, 0, rectWidth, 75);
+
+            ctx.fillStyle = 'white';
+            ctx.textAlign = "center";
+            ctx.fillText(`${rects[i].username}`, rects[i].x + rollWithEase + ctx.measureText(`${rects[i].username}`).width / 2, rectWidth / 2);
           }
         }
       }
 
-      function draw() {
-        const randomWinnerNr = Math.floor(Math.random() * (nrOfEnrolled + 1)); // TODO: stop the wheel on the winner
+      const draw = () => {
+        const randomWinnerNr = Math.floor(Math.random() * (this.enrolledUsers.length + 1)); // TODO: stop the wheel on the winner
         winnerRect = rects.find((rect) => rect.id === randomWinnerNr);
         const winnerIndex = rects.findIndex((rect) => rect.id === randomWinnerNr);
         spinStart = winnerRect.x - (canvas.width / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1;
@@ -136,7 +164,7 @@ export default {
       // =========================
       btn.addEventListener("click", () => {
         spin()
-        this.socket.emit('spin')
+        this.socket.emit('spin', this.generatedId)
       });
 
       function easeOutQuart(t, b, c, d) {
@@ -147,7 +175,7 @@ export default {
           spinTime += 30;
 
           if (spinTime >= spinTimeTotal) {
-            console.log("stopped wheel", spinTimeTotal);
+            console.log("stopped wheel", spinTimeTotal, winnerRect);
 
             startWheelRoll = false;
             window.cancelAnimationFrame(this.animFrameId);

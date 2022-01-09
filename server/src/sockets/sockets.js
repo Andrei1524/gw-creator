@@ -13,7 +13,14 @@ function listen(io) {
       socket.join(room)
     })
 
-    socket.on('spin', () => {
+    socket.on('spin', async (generatedId) => {
+      // const rects = [];
+      // const nrOfEnrolled = 25;
+      //
+      //
+      // const foundGiveaway = await Giveaway.findOne({generatedId: generatedId}).lean().exec()
+      // nrOfEnrolled = foundGiveaway.enrolled_users.length
+
       // socket.to(room).emit('spin', )
     })
 
@@ -23,6 +30,17 @@ function listen(io) {
     // })
   })
 }
+
+// function generateRects(enroll) {
+//   for (let i = 0; i < nrOfEnrolled; i++) {
+//     rects.push({
+//       id: i,
+//       x: startRectX
+//     });
+//     startRectX += rectWidth + gap;
+//   }
+// }
+// generateRects();
 
 module.exports = {
   listen

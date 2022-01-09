@@ -102,7 +102,7 @@
         </b-col>
 
         <b-col cols='12' md='7'>
-          <Roulette :generated-id='giveaway.generatedId' />
+          <Roulette :generated-id='giveaway.generatedId' :enrolled-users='giveaway.enrolled_users' />
         </b-col>
       </b-row>
     </div>
