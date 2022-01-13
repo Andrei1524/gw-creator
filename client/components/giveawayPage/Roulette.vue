@@ -33,7 +33,8 @@ export default {
       requestAnimationFrame: null,
       cancelAnimationFrame: null,
       animFrameId: null,
-      enrolledUsersData: []
+      enrolledUsersData: [],
+      rects: []
     }
   },
 
@@ -45,10 +46,24 @@ export default {
       reconnection: true
     })
 
-    // connect to the server
-    await this.getRandomUsersForDefaultWheel()
+    // emit ready event
+    const canvas = document.getElementById("c");
+    this.socket.emit('ready', this.generatedId, canvas.width)
+
+    // await this.getRandomUsersForDefaultWheel()
+    await this.socket.on('newGeneratedRects', newGeneratedRects => {
+      this.rects = newGeneratedRects
+      // console.log(newGeneratedRects.find(rect => rect.isWinner))
+    })
+
+    await this.socket.on('winnerRect', winnerRect => {
+      console.log(winnerRect, 'winner rect')
+      const index = this.rects.findIndex(r => r._id === winnerRect._id)
+      this.rects[index].isWinner = true
+    })
+
+    await this.initCanvas()
     this.onConnect()
-    this.initCanvas()
   },
 
   destroyed() {
@@ -74,7 +89,7 @@ export default {
       this.enrolledUsersData = response.data.enrolled_users
     },
 
-    initCanvas() {
+    async initCanvas() {
       const btn = document.getElementById("pick_winner");
       const canvas = document.getElementById("c");
       const ctx = canvas.getContext("2d");
@@ -85,7 +100,7 @@ export default {
         .querySelector(".roulette")
         .getBoundingClientRect().width;
       canvas.height = 75;
-      const rects = [];
+      this.rects = [];
 
       // config
       const rectWidth = 75;
@@ -100,10 +115,10 @@ export default {
         height: canvas.height
       }
 
-      // functions =================== // TODO: move code to server side
+      // functions ===================
       const generateDefaultRects = () => {
         for (let i = 0; i < this.enrolledUsersData.length; i++) {
-          rects.push({
+          this.rects.push({
             id: i,
             x: startRectX,
             username: this.enrolledUsersData[i].username
@@ -114,86 +129,41 @@ export default {
       generateDefaultRects();
 
       // ===================
-      let winnerRect = null;
-
-      // canvas code
-      let startWheelRoll = false;
-
-      // easing
-      let spinTime = 0;
-      let spinStart = 0;
-      let spinTimeTotal = 0;
-
-      //
       let rollWithEase = 0;
 
-      function drawRects() {
-        for (let i = 0; i < rects.length; i++) {
-          if (!rects[i].isWinner) {
+      const drawRects = () => {
+        for (let i = 0; i < this.rects.length; i++) {
+          if (!this.rects[i].isWinner) {
             ctx.fillStyle = "#000";
-            ctx.fillRect(rects[i].x + rollWithEase, 0, rectWidth, rectWidth);
+            ctx.fillRect(this.rects[i].x + rollWithEase, 0, rectWidth, rectWidth);
 
             ctx.fillStyle = 'white';
             ctx.textAlign = "center";
-            ctx.fillText(`${rects[i].username}`, rects[i].x + rollWithEase + ctx.measureText(`${rects[i].username}`).width / 2, rectWidth / 2);
+            ctx.fillText(`${this.rects[i].username}`, this.rects[i].x + rollWithEase + ctx.measureText(`${this.rects[i].username}`).width / 2, rectWidth / 2);
           } else {
             ctx.fillStyle = "#FF0000";
-            ctx.fillRect(rects[i].x + rollWithEase, 0, rectWidth, 75);
+            ctx.fillRect(this.rects[i].x + rollWithEase, 0, rectWidth, 75);
 
             ctx.fillStyle = 'white';
             ctx.textAlign = "center";
-            ctx.fillText(`${rects[i].username}`, rects[i].x + rollWithEase + ctx.measureText(`${rects[i].username}`).width / 2, rectWidth / 2);
+            ctx.fillText(`${this.rects[i].username}`, this.rects[i].x + rollWithEase + ctx.measureText(`${this.rects[i].username}`).width / 2, rectWidth / 2);
           }
         }
       }
 
-      const draw = () => {
-        const randomWinnerNr = Math.floor(Math.random() * (this.enrolledUsers.length + 1)); // TODO: stop the wheel on the winner
-        winnerRect = rects.find((rect) => rect.id === randomWinnerNr);
-        const winnerIndex = rects.findIndex((rect) => rect.id === randomWinnerNr);
-        spinStart = winnerRect.x - (canvas.width / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1;
-        rects[winnerIndex].isWinner = true;
-      }
-
-      function spin() {
-        draw();
-        spinTimeTotal = winnerRect.x * 10; // control the length of the spinn
-        startWheelRoll = true;
-        rollWheel();
-      }
-      // =========================
+      // ========================
       btn.addEventListener("click", () => {
-        spin()
-        this.socket.emit('spin', this.generatedId)
+        this.socket.emit('startSpin', this.generatedId, canvas.width)
       });
 
-      function easeOutQuart(t, b, c, d) {
-        return -c * ((t = t / d - 1) * t * t * t - 1) + b;
-      }
-      const rollWheel = () => {
-        if (startWheelRoll) {
-          spinTime += 30;
+      await this.socket.on('newGeneratedRects', newGeneratedRects => {
+        this.rects = newGeneratedRects
+      })
 
-          if (spinTime >= spinTimeTotal) {
-            console.log("stopped wheel", spinTimeTotal, winnerRect);
-
-            startWheelRoll = false;
-            window.cancelAnimationFrame(this.animFrameId);
-            this.animFrameId = null
-            return;
-          } else {
-            const rollTimeWithEase = easeOutQuart(
-              spinTime,
-              0,
-              spinStart,
-              spinTimeTotal
-            );
-            rollWithEase = -rollTimeWithEase;
-            drawRouletteWheel();
-          }
-        }
-        this.animFrameId = window.requestAnimationFrame(rollWheel)
-      }
+      // sockets listener
+      this.socket.on('spin', (data) => {
+        rollWithEase = data
+      })
 
       const drawRouletteWheel = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -207,7 +177,8 @@ export default {
         ctx.fill();
 
         // emit ready event for the server
-        this.socket.emit("ready", this.generatedId)
+        // this.socket.emit("ready", this.generatedId) // TODO: fix this, remove from loop
+        this.animFrameId = window.requestAnimationFrame(drawRouletteWheel)
       }
 
       drawRouletteWheel();
