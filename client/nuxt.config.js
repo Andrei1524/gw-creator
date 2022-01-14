@@ -53,7 +53,7 @@ export default {
     sockets: [ // Required
       { // At least one entry is required
         name: 'home',
-        url: 'http://localhost:3000',
+        url: process.env.BASE_URL,
         default: true,
       },
     ]

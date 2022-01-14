@@ -64,7 +64,7 @@ function listen(io) {
 
       // rollWhell variables
       let spinTime = 0
-      let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1;
+      let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1; // TODO: get dinamically canvas width
       let spinTimeTotal = 0;
 
       spinTimeTotal = winnerXPos * 7;
