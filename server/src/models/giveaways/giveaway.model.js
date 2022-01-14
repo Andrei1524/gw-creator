@@ -28,6 +28,8 @@ async function createGiveaway(req, res, giveaway) {
       nr_of_participants: giveaway.nr_of_participants,
       nr_of_winners: giveaway.nr_of_winners,
       pick_winner_method: giveaway.pick_winner_method,
+      isRouletteRolling: false,
+      winner: null,
       created_by: req.user._id,
       status: giveawayStatuses.OPEN
     })
@@ -58,7 +60,7 @@ async function getGiveaways(req, res, page) {
 }
 
 async function getGiveaway(req, res, generatedId) {
-  return await Giveaway.findOne({generatedId}).lean().exec()
+  return await Giveaway.findOne({generatedId}).populate('winner').lean().exec()
 }
 
 async function enrollUserInGiveaway(req, res, generatedId) {

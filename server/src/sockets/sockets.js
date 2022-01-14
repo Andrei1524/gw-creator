@@ -3,7 +3,7 @@ const Giveaway = require('../models/giveaways/giveaway.mongo')
 function listen(io) {
   const giveawayNameSpace = io.of('/giveaway')
 
-  giveawayNameSpace.on('connection', (socket) => {
+  giveawayNameSpace.on('connection', async (socket) => {
     let room
     let rollWithEase = 0;
     let rects = []
@@ -13,13 +13,13 @@ function listen(io) {
     const wheelUsersSize = 100
 
     let winner = null
-    let isRouletteRolling = false //TODO: find way to keep roullete state
-    console.log('user connected', socket.id)
+    let foundGiveaway = null
 
     socket.on('ready', async (generatedId, canvasWidth) => {
-      const foundGiveaway = await Giveaway // TODO: refactor this + keep final state of the roullete
+      foundGiveaway = await Giveaway // TODO: refactor this + keep final state of the roullete
         .findOne({ generatedId: generatedId })
         .populate('enrolled_users')
+        .populate('winner')
         .select(['-password', '-refreshToken', '-email'])
         .lean().exec()
 
@@ -27,30 +27,37 @@ function listen(io) {
       room = 'room_' + generatedId
       socket.join(room)
 
-      rects = generateWheelRects(foundGiveaway.enrolled_users, null, rectWidth, gap)
-      giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
-
-      if (!isRouletteRolling) {
-        isRouletteRolling = true
+      if (foundGiveaway.winner) {
+        winner = foundGiveaway.winner
+        winner.isWinner = true
+        rects = generateWheelRects(foundGiveaway.enrolled_users, winner, rectWidth, gap)
+        giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
         giveawayNameSpace.in(room).emit('winnerRect', winner)
+      } else {
+        rects = generateWheelRects(foundGiveaway.enrolled_users, null, rectWidth, gap)
+        giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
       }
-
     })
 
     socket.on('startSpin', async (generatedId, canvasWidth) => {
-      await spin(generatedId, canvasWidth)
+      // allow spin if user wasnt extracted yet
+      if (!foundGiveaway.winner) {
+        await spin(generatedId, canvasWidth)
+      }
     })
 
     async function spin(generatedId, canvasWidth) {
-      const foundGiveaway = await Giveaway // TODO: refactor this
-        .findOne({ generatedId: generatedId })
-        .populate('enrolled_users')
-        .select(['-password', '-refreshToken', '-email'])
-        .lean().exec()
-
+      // check if winner has been already extracted
       const [ winnerFromDraw, winnerXPos ] = draw(foundGiveaway.enrolled_users, rectWidth, gap)
       winner = winnerFromDraw
+
       rects = generateWheelRects(foundGiveaway.enrolled_users, winner, rectWidth, gap)
+
+      // update Giveaway winners
+      const updatedGiveaway = await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
+        winner: winner._id,
+        isRouletteRolling: true
+      }, {new:true}).populate('winner')
 
       // emit the new generated rects
       socket.emit('newGeneratedRects', rects)
@@ -60,17 +67,19 @@ function listen(io) {
       let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1;
       let spinTimeTotal = 0;
 
-      spinTimeTotal = winnerXPos * 10;
+      spinTimeTotal = winnerXPos * 5;
 
       let timeout = null
       let immediate = null
-      function rollWheel() {
+      async function rollWheel() {
         spinTime += 30;
 
         if (spinTime >= spinTimeTotal) {
-          console.log("stopped isRouletteRolling", winner);
-          isRouletteRolling = false
+          giveawayNameSpace.in(room).emit('rouletteEnds', foundGiveaway.isRouletteRolling, updatedGiveaway.winner)
 
+          await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
+            isRouletteRolling: false
+          })
           // clearInterval(wheelTimer)
         } else {
           const rollTimeWithEase = easeOutQuart(
@@ -82,8 +91,6 @@ function listen(io) {
           rollWithEase = -rollTimeWithEase;
 
           giveawayNameSpace.in(room).emit('spin', rollWithEase)
-          // console.log(spinTime)
-          // emit spinTime and receive on client
         }
       }
 
@@ -109,8 +116,6 @@ function listen(io) {
             // console.log('still rolling')
             update(delta)
           }
-
-
           // console.log('delta', delta, '(target: ' + tickLengthMs +' ms)', 'node ticks', actualTicks)
           actualTicks = 0
         }
@@ -149,6 +154,7 @@ function generateWheelRects(enrolledUsers, winner, rectWidth, gap) {
   for (let i = 0; i < enrolledUsers.length; i++) {
     if (winner && enrolledUsers[i].username === winner.username) {
       rects.push({
+        _id: enrolledUsers[i]._id,
         id: i,
         x: startRectX,
         username: enrolledUsers[i].username,
@@ -156,6 +162,7 @@ function generateWheelRects(enrolledUsers, winner, rectWidth, gap) {
       });
     } else {
       rects.push({
+        _id: enrolledUsers[i]._id,
         id: i,
         x: startRectX,
         username: enrolledUsers[i].username

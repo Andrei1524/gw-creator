@@ -34,6 +34,8 @@ async function createTestGiveaway(req, res) {
       nr_of_participants: 50,
       nr_of_winners: 1,
       pick_winner_method: 'automatic',
+      isRouletteRolling: false,
+      winner: null,
       created_by: req.user._id,
       status: giveawayStatuses.OPEN,
       enrolled_users: listOfGeneratedUsers
