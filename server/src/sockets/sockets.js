@@ -67,7 +67,7 @@ function listen(io) {
       let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1;
       let spinTimeTotal = 0;
 
-      spinTimeTotal = winnerXPos * 5;
+      spinTimeTotal = winnerXPos * 7;
 
       let timeout = null
       let immediate = null
