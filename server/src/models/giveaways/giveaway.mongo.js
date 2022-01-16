@@ -61,6 +61,11 @@ const giveawaySchema = new mongoose.Schema({
     required: true
   },
 
+  randomWinnerStop: {
+    type: Number,
+    required: false
+  },
+
   pick_winner_method: {
     type: String,
     required: true

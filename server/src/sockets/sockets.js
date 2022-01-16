@@ -31,9 +31,9 @@ function listen(io) {
         winner = foundGiveaway.winner
         winner.isWinner = true
         rects = generateWheelRects(foundGiveaway.enrolled_users, winner, rectWidth, gap)
-        giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
+        giveawayNameSpace.in(room).emit('newGeneratedRects', rects, foundGiveaway.randomWinnerStop)
       } else {
-        rects = generateWheelRects(foundGiveaway.enrolled_users, winner, rectWidth, gap)
+        rects = generateWheelRects(foundGiveaway.enrolled_users, null, rectWidth, gap)
         giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
       }
     })
@@ -55,15 +55,17 @@ function listen(io) {
       // update Giveaway winners
       const updatedGiveaway = await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
         winner: winner._id,
-        isRouletteRolling: true
+        isRouletteRolling: true,
+        randomWinnerStop: Math.floor(Math.random() * (rectWidth - 10)) + 1
       }, {new:true}).populate('winner')
 
       // emit the new generated rects with the winner inside //
-      giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
+      giveawayNameSpace.in(room).emit('newGeneratedRects', rects, updatedGiveaway.randomWinnerStop)
 
       // rollWhell variables
       let spinTime = 0
-      let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1; // TODO: get dynamically canvas width
+      // let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1; // TODO: get dynamically canvas width
+      let spinStart = winnerXPos
       let spinTimeTotal = 0;
 
       spinTimeTotal = winnerXPos * 7;
@@ -75,8 +77,8 @@ function listen(io) {
 
         if (spinTime >= spinTimeTotal) {
           await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
-            winner: winner, // TODO: remove this when done testing
-            rouletteEnded: true,
+            winner: null, // TODO: remove this when done testing -> winner: winner
+            rouletteEnded: false, // set to 'true' after testing
             isRouletteRolling: false
           })
 

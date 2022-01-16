@@ -58,61 +58,74 @@ export default {
       requestAnimationFrame: null,
       cancelAnimationFrame: null,
       animFrameId: null,
+      resizeEventId: null,
       enrolledUsersData: [],
       rects: [],
       isRouletteRolling: false,
       loadingRoulette: false,
       winner: null,
+      randomWinnerStop: 0
     }
   },
 
   mounted() {
-    this.loadingRoulette = true
-    // init socket
-    if (!this.giveaway.rouletteEnded) {
-      this.socket = this.$nuxtSocket({
-        name: 'home',
-        channel: '/giveaway',
-        reconnection: true
-      })
-
-      // emit ready event
-      const canvas = document.getElementById("c");
-      this.socket.emit('ready', this.generatedId, canvas.width)
-      this.socket.on('newGeneratedRects', newGeneratedRects => {
-        this.rects = newGeneratedRects
-      })
-
-      this.socket.on('winnerRect', winnerRect => {
-        if (winnerRect) {
-          const index = this.rects.findIndex(r => r._id === winnerRect._id)
-          this.rects[index].isWinner = true
-
-          this.winner = winnerRect
-        }
-      })
-
-      this.onConnect()
-
-      // listen to roulette stop events
-      this.socket.on('rouletteEnded', (isRouletteRolling, winner) => {
-        this.isRouletteRolling = isRouletteRolling
-        this.winner = winner
-      })
-    } else { // roulette ended and winner chosen
-      this.winner = this.giveaway.winner
-    }
-
-    this.loadingRoulette = false
+    this.initCanvasSockets()
+    // event listeners
+    // window.addEventListener('resize', this.initCanvasSockets)
   },
 
   destroyed() {
     window.cancelAnimationFrame(this.animFrameId);
+    // window.removeEventListener('resize', this.initCanvasSockets)
     this.animFrameId = null
   },
 
   methods: {
     ...mapActions('modules/giveaways', ['getGiveawayEnrolledUsers']),
+
+    initCanvasSockets() {
+      this.loadingRoulette = true
+      // init socket
+      if (!this.giveaway.rouletteEnded) {
+        this.socket = this.$nuxtSocket({
+          name: 'home',
+          channel: '/giveaway',
+          reconnection: true
+        })
+
+        // emit ready event
+        const canvas = document.getElementById("c");
+        this.socket.emit('ready', this.generatedId, canvas.width)
+        this.socket.on('newGeneratedRects', (newGeneratedRects, randomWinnerStop) => {
+          this.rects = randomWinnerStop
+
+          if (randomWinnerStop) {
+            this.randomWinnerStop = randomWinnerStop
+          }
+        })
+
+        this.socket.on('winnerRect', winnerRect => {
+          if (winnerRect) {
+            const index = this.rects.findIndex(r => r._id === winnerRect._id)
+            this.rects[index].isWinner = true
+
+            this.winner = winnerRect
+          }
+        })
+
+        this.onConnect()
+
+        // listen to roulette stop events
+        this.socket.on('rouletteEnded', (isRouletteRolling, winner) => {
+          this.isRouletteRolling = isRouletteRolling
+          this.winner = winner
+        })
+      } else { // roulette ended and winner chosen
+        this.winner = this.giveaway.winner
+      }
+
+      this.loadingRoulette = false
+    },
 
     onConnect() {
       this.socket.on('connect', async () => {
@@ -174,18 +187,18 @@ export default {
         });
       }
 
-      await this.socket.on('newGeneratedRects', newGeneratedRects => {
+      await this.socket.on('newGeneratedRects', (newGeneratedRects, randomWinnerStop) => {
         this.rects = newGeneratedRects
+        this.randomWinnerStop = randomWinnerStop
       })
 
       // sockets listener
       this.socket.on('spin', (data) => {
-        rollWithEase = data
+        rollWithEase = data + (canvas.width / 2) - this.randomWinnerStop // handle this on server TODO:
       })
 
       const drawRouletteWheel = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         drawRects();
 
         // draw centered line
