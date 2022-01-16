@@ -1,23 +1,27 @@
 <template>
   <div class='roulette'>
     <b-spinner v-if='loadingRoulette' type="grow"></b-spinner>
-    <div class='canvas'>
-      <canvas id="c"></canvas>
-    </div>
-    <div v-if='winner'>
-      WINNER: {{ winner.username }}
-    </div>
 
-    <b-button
-      v-if="$auth.user && ($auth.user._id === giveaway.created_by)"
-      id='pick_winner'
-      :disabled='winner !== null || isRouletteRolling'
-      class='custom-btn pick font-weight-bolder mt-4 margin-auto' type="submit"
-      variant="primary"
-    >
-      <b-spinner v-show='isRouletteRolling' small type="grow" class='mr-1'></b-spinner>
-      PICK WINNER
-    </b-button>
+    <div v-else class='roulette-wrapper'>
+      <div v-if='!winner' class='canvas'>
+        <canvas id="c"></canvas>
+      </div>
+
+      <div v-if='winner'>
+        WINNER: {{ winner.username }}
+      </div>
+
+      <b-button
+        v-if="$auth.user && ($auth.user._id === giveaway.created_by)"
+        id='pick_winner'
+        :disabled='winner !== null || isRouletteRolling'
+        class='custom-btn pick font-weight-bolder mt-4 margin-auto' type="submit"
+        variant="primary"
+      >
+        <b-spinner v-show='isRouletteRolling' small type="grow" class='mr-1'></b-spinner>
+        PICK WINNER
+      </b-button>
+    </div>
   </div>
 </template>
 
@@ -62,40 +66,44 @@ export default {
     }
   },
 
-  mounted() { // TODO: rewrite all this code
+  mounted() {
+    this.loadingRoulette = true
     // init socket
-    this.socket = this.$nuxtSocket({
-      name: 'home',
-      channel: '/giveaway',
-      reconnection: true
-    })
+    if (!this.giveaway.rouletteEnded) {
+      this.socket = this.$nuxtSocket({
+        name: 'home',
+        channel: '/giveaway',
+        reconnection: true
+      })
 
-    // emit ready event
-    const canvas = document.getElementById("c");
-    this.socket.emit('ready', this.generatedId, canvas.width)
-    this.socket.on('newGeneratedRects', newGeneratedRects => {
-      console.log('new generated rects with winner')
-      this.rects = newGeneratedRects
-    })
+      // emit ready event
+      const canvas = document.getElementById("c");
+      this.socket.emit('ready', this.generatedId, canvas.width)
+      this.socket.on('newGeneratedRects', newGeneratedRects => {
+        this.rects = newGeneratedRects
+      })
 
-    this.socket.on('winnerRect', winnerRect => {
-      if (winnerRect) {
-        const index = this.rects.findIndex(r => r._id === winnerRect._id)
-        this.rects[index].isWinner = true
+      this.socket.on('winnerRect', winnerRect => {
+        if (winnerRect) {
+          const index = this.rects.findIndex(r => r._id === winnerRect._id)
+          this.rects[index].isWinner = true
 
-        this.winner = winnerRect
-      }
-    })
+          this.winner = winnerRect
+        }
+      })
 
-    this.onConnect()
+      this.onConnect()
 
-    // listen to roulette stop events
-    this.socket.on('rouletteEnded', (isRouletteRolling, winner) => {
-      this.isRouletteRolling = isRouletteRolling
-      this.winner = winner
+      // listen to roulette stop events
+      this.socket.on('rouletteEnded', (isRouletteRolling, winner) => {
+        this.isRouletteRolling = isRouletteRolling
+        this.winner = winner
+      })
+    } else { // roulette ended and winner chosen
+      this.winner = this.giveaway.winner
+    }
 
-      console.log(isRouletteRolling, winner)
-    })
+    this.loadingRoulette = false
   },
 
   destroyed() {
@@ -113,7 +121,6 @@ export default {
     },
 
     async initCanvas() {
-      this.loadingRoulette = true
       const btn = document.getElementById("pick_winner");
       const canvas = document.getElementById("c");
       const ctx = canvas.getContext("2d");
@@ -160,7 +167,7 @@ export default {
       }
 
       // ========================
-      if (this.$auth.user._id === this.giveaway.created_by) {
+      if (this.$auth.user && (this.$auth.user._id === this.giveaway.created_by)) {
         btn.addEventListener("click", () => {
           this.isRouletteRolling = true
           this.socket.emit('startSpin', this.generatedId, canvas.width)
@@ -169,7 +176,6 @@ export default {
 
       await this.socket.on('newGeneratedRects', newGeneratedRects => {
         this.rects = newGeneratedRects
-        this.loadingRoulette = false
       })
 
       // sockets listener

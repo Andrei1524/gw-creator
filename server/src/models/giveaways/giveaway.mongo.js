@@ -50,7 +50,13 @@ const giveawaySchema = new mongoose.Schema({
   },
 
   winner: { type: Schema.Types.ObjectId, ref: 'User' },
+
   isRouletteRolling: {
+    type: Boolean,
+    required: true
+  },
+
+  rouletteEnded: {
     type: Boolean,
     required: true
   },

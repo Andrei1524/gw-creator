@@ -75,7 +75,8 @@ function listen(io) {
 
         if (spinTime >= spinTimeTotal) {
           await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
-            winner: null, // TODO: remove this when done testing
+            winner: winner, // TODO: remove this when done testing
+            rouletteEnded: true,
             isRouletteRolling: false
           })
 

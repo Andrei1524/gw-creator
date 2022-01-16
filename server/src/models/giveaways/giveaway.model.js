@@ -29,6 +29,7 @@ async function createGiveaway(req, res, giveaway) {
       nr_of_winners: giveaway.nr_of_winners,
       pick_winner_method: giveaway.pick_winner_method,
       isRouletteRolling: false,
+      rouletteEnded: false,
       winner: null,
       created_by: req.user._id,
       status: giveawayStatuses.OPEN
