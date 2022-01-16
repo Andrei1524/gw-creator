@@ -19,7 +19,7 @@ async function createTestGiveaway(req, res) {
     })
 
     // create test giveaway
-    let nrOfUsers = 150
+    let nrOfUsers = 100
     let randomName = `test: ${Math.floor(Math.random() * nrOfUsers)}`
     let listOfGeneratedUsers = await generateUsers(nrOfUsers)
 

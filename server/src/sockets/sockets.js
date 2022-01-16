@@ -27,20 +27,19 @@ function listen(io) {
       room = 'room_' + generatedId
       socket.join(room)
 
-      if (foundGiveaway.winner) {
+      if (foundGiveaway.winner && foundGiveaway.isRouletteRolling) {
         winner = foundGiveaway.winner
         winner.isWinner = true
         rects = generateWheelRects(foundGiveaway.enrolled_users, winner, rectWidth, gap)
         giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
-        giveawayNameSpace.in(room).emit('winnerRect', winner)
       } else {
-        rects = generateWheelRects(foundGiveaway.enrolled_users, null, rectWidth, gap)
+        rects = generateWheelRects(foundGiveaway.enrolled_users, winner, rectWidth, gap)
         giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
       }
     })
 
     socket.on('startSpin', async (generatedId, canvasWidth) => {
-      // allow spin if user wasnt extracted yet
+      // allow spin if user wasn't extracted yet
       if (!foundGiveaway.winner) {
         await spin(generatedId, canvasWidth)
       }
@@ -59,12 +58,12 @@ function listen(io) {
         isRouletteRolling: true
       }, {new:true}).populate('winner')
 
-      // emit the new generated rects
-      socket.emit('newGeneratedRects', rects)
+      // emit the new generated rects with the winner inside //
+      giveawayNameSpace.in(room).emit('newGeneratedRects', rects)
 
       // rollWhell variables
       let spinTime = 0
-      let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1; // TODO: get dinamically canvas width
+      let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1; // TODO: get dynamically canvas width
       let spinTimeTotal = 0;
 
       spinTimeTotal = winnerXPos * 7;
@@ -75,11 +74,12 @@ function listen(io) {
         spinTime += 30;
 
         if (spinTime >= spinTimeTotal) {
-          giveawayNameSpace.in(room).emit('rouletteEnds', foundGiveaway.isRouletteRolling, updatedGiveaway.winner)
-
           await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
+            winner: null, // TODO: remove this when done testing
             isRouletteRolling: false
           })
+
+          giveawayNameSpace.in(room).emit('rouletteEnded', false, updatedGiveaway.winner)
           // clearInterval(wheelTimer)
         } else {
           const rollTimeWithEase = easeOutQuart(

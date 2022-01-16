@@ -1,15 +1,15 @@
 <template>
   <div class='roulette'>
     <b-spinner v-if='loadingRoulette' type="grow"></b-spinner>
-    <div v-show='!loadingRoulette' class='canvas'>
-      <canvas v-if="!giveaway.winner || isRouletteRolling" id="c"></canvas>
+    <div class='canvas'>
+      <canvas id="c"></canvas>
     </div>
-    <div v-if='winner && !isRouletteRolling'>
+    <div v-if='winner'>
       WINNER: {{ winner.username }}
     </div>
 
     <b-button
-      v-if="$auth.user"
+      v-if="$auth.user && ($auth.user._id === giveaway.created_by)"
       id='pick_winner'
       :disabled='winner !== null || isRouletteRolling'
       class='custom-btn pick font-weight-bolder mt-4 margin-auto' type="submit"
@@ -24,7 +24,7 @@
 <script>
 // TODO:
 // start the game server connection when one player joins the page
-// if there are no players left on the giveaway page, close the game loop on the server
+// if there are no users left on the giveaway page, close the game loop on the server
 // establish connection with the server | add some loader
 
 import { mapActions } from 'vuex'
@@ -62,44 +62,40 @@ export default {
     }
   },
 
-  async mounted() {
-    if (!this.giveaway.winner || this.giveaway.isRouletteRolling) {
-      // init socket
-      this.socket = this.$nuxtSocket({
-        name: 'home',
-        channel: '/giveaway',
-        reconnection: true
-      })
+  mounted() { // TODO: rewrite all this code
+    // init socket
+    this.socket = this.$nuxtSocket({
+      name: 'home',
+      channel: '/giveaway',
+      reconnection: true
+    })
 
-      // emit ready event
-      const canvas = document.getElementById("c");
-      this.socket.emit('ready', this.generatedId, canvas.width)
-      // await this.getRandomUsersForDefaultWheel()
-      await this.socket.on('newGeneratedRects', newGeneratedRects => {
-        this.rects = newGeneratedRects
-        // console.log(newGeneratedRects.find(rect => rect.isWinner))
-      })
+    // emit ready event
+    const canvas = document.getElementById("c");
+    this.socket.emit('ready', this.generatedId, canvas.width)
+    this.socket.on('newGeneratedRects', newGeneratedRects => {
+      console.log('new generated rects with winner')
+      this.rects = newGeneratedRects
+    })
 
-      await this.socket.on('winnerRect', winnerRect => {
-        if (winnerRect) {
-          console.log(winnerRect, 'winner rect')
-          const index = this.rects.findIndex(r => r._id === winnerRect._id)
-          this.rects[index].isWinner = true
-        }
-      })
+    this.socket.on('winnerRect', winnerRect => {
+      if (winnerRect) {
+        const index = this.rects.findIndex(r => r._id === winnerRect._id)
+        this.rects[index].isWinner = true
 
-      this.onConnect()
+        this.winner = winnerRect
+      }
+    })
 
-      // listen to roulette stop events
-      this.socket.on('rouletteEnds', (isRouletteRolling, winner) => {
-        this.isRouletteRolling = isRouletteRolling
-        this.winner = winner
+    this.onConnect()
 
-        console.log(isRouletteRolling, winner)
-      })
-    } else {
-      this.winner = this.giveaway.winner
-    }
+    // listen to roulette stop events
+    this.socket.on('rouletteEnded', (isRouletteRolling, winner) => {
+      this.isRouletteRolling = isRouletteRolling
+      this.winner = winner
+
+      console.log(isRouletteRolling, winner)
+    })
   },
 
   destroyed() {
@@ -114,15 +110,6 @@ export default {
       this.socket.on('connect', async () => {
         await this.initCanvas()
       })
-    },
-
-    async getRandomUsersForDefaultWheel() {
-      const payload = {
-        generatedId: this.generatedId,
-        computedQueries: ""
-      }
-      const response = await this.getGiveawayEnrolledUsers(payload)
-      this.enrolledUsersData = response.data.enrolled_users
     },
 
     async initCanvas() {
@@ -141,8 +128,6 @@ export default {
 
       // config
       const rectWidth = 75;
-      const gap = 5;
-      let startRectX = 0;
 
       // line
       const line = {
@@ -151,20 +136,6 @@ export default {
         width: 5,
         height: canvas.height
       }
-
-      // functions ===================
-      const generateDefaultRects = () => {
-        for (let i = 0; i < this.enrolledUsersData.length; i++) {
-          this.rects.push({
-            id: i,
-            x: startRectX,
-            username: this.enrolledUsersData[i].username
-          });
-          startRectX += rectWidth + gap;
-        }
-      }
-      generateDefaultRects();
-
       // ===================
       let rollWithEase = 0;
 
@@ -189,10 +160,12 @@ export default {
       }
 
       // ========================
-      btn.addEventListener("click", () => {
-        this.isRouletteRolling = true
-        this.socket.emit('startSpin', this.generatedId, canvas.width)
-      });
+      if (this.$auth.user._id === this.giveaway.created_by) {
+        btn.addEventListener("click", () => {
+          this.isRouletteRolling = true
+          this.socket.emit('startSpin', this.generatedId, canvas.width)
+        });
+      }
 
       await this.socket.on('newGeneratedRects', newGeneratedRects => {
         this.rects = newGeneratedRects
