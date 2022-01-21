@@ -42,6 +42,8 @@ function listen(io) {
       // allow spin if user wasn't extracted yet
       if (!foundGiveaway.winner) {
         await spin(generatedId, canvasWidth)
+      } else {
+        console.log("already extracted")
       }
     })
 
@@ -59,12 +61,11 @@ function listen(io) {
         randomWinnerStop: Math.floor(Math.random() * (rectWidth - 10)) + 1
       }, {new:true}).populate('winner')
 
-      // emit the new generated rects with the winner inside //
+      // emit the new generated rects with the winner inside
       giveawayNameSpace.in(room).emit('newGeneratedRects', rects, updatedGiveaway.randomWinnerStop)
 
       // rollWhell variables
       let spinTime = 0
-      // let spinStart = winnerXPos - (canvasWidth / 2) + Math.floor(Math.random() * (rectWidth - 10)) + 1; // TODO: get dynamically canvas width
       let spinStart = winnerXPos
       let spinTimeTotal = 0;
 
@@ -83,7 +84,6 @@ function listen(io) {
           })
 
           giveawayNameSpace.in(room).emit('rouletteEnded', false, updatedGiveaway.winner)
-          // clearInterval(wheelTimer)
         } else {
           const rollTimeWithEase = easeOutQuart(
             spinTime,

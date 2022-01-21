@@ -2,7 +2,7 @@
   <div class='roulette'>
     <b-spinner v-if='loadingRoulette' type="grow"></b-spinner>
 
-    <div v-else class='roulette-wrapper'>
+    <div v-show="!loadingRoulette" class='roulette-wrapper'>
       <div v-if='!winner' class='canvas'>
         <canvas id="c"></canvas>
       </div>
@@ -30,7 +30,7 @@
 // start the game server connection when one player joins the page
 // if there are no users left on the giveaway page, close the game loop on the server
 // establish connection with the server | add some loader
-
+import _ from 'lodash'
 import { mapActions } from 'vuex'
 
 export default {
@@ -68,15 +68,22 @@ export default {
     }
   },
 
-  mounted() {
-    this.initCanvasSockets()
+  async mounted() {
+    this.loadingRoulette = true
+    await this.initCanvasSockets()
     // event listeners
-    // window.addEventListener('resize', this.initCanvasSockets)
+    window.addEventListener('resize', _.debounce(() => {
+      this.emitReady()
+      this.initCanvas()
+    }, 200))
   },
 
   destroyed() {
     window.cancelAnimationFrame(this.animFrameId);
-    // window.removeEventListener('resize', this.initCanvasSockets)
+    window.removeEventListener('resize', () => {
+      this.emitReady()
+      this.initCanvas()
+    })
     this.animFrameId = null
   },
 
@@ -84,7 +91,6 @@ export default {
     ...mapActions('modules/giveaways', ['getGiveawayEnrolledUsers']),
 
     initCanvasSockets() {
-      this.loadingRoulette = true
       // init socket
       if (!this.giveaway.rouletteEnded) {
         this.socket = this.$nuxtSocket({
@@ -94,14 +100,15 @@ export default {
         })
 
         // emit ready event
-        const canvas = document.getElementById("c");
-        this.socket.emit('ready', this.generatedId, canvas.width)
+        this.emitReady()
+
         this.socket.on('newGeneratedRects', (newGeneratedRects, randomWinnerStop) => {
           this.rects = randomWinnerStop
 
           if (randomWinnerStop) {
             this.randomWinnerStop = randomWinnerStop
           }
+          this.loadingRoulette = false
         })
 
         this.socket.on('winnerRect', winnerRect => {
@@ -123,8 +130,6 @@ export default {
       } else { // roulette ended and winner chosen
         this.winner = this.giveaway.winner
       }
-
-      this.loadingRoulette = false
     },
 
     onConnect() {
@@ -133,7 +138,17 @@ export default {
       })
     },
 
+    emitReady() {
+      const canvas = document.getElementById("c");
+      this.socket.emit('ready', this.generatedId, canvas.width)
+    },
+
     async initCanvas() {
+      if (this.animFrameId !== null) {
+        window.cancelAnimationFrame(this.animFrameId);
+        this.animFrameId = null
+      }
+
       const btn = document.getElementById("pick_winner");
       const canvas = document.getElementById("c");
       const ctx = canvas.getContext("2d");
@@ -223,6 +238,10 @@ export default {
 
 #c {
   //border: 1px solid black;
+}
+
+.roulette {
+  height: 85px;
 }
 
 .pick {
