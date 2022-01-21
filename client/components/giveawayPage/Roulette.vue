@@ -12,7 +12,7 @@
       </div>
 
       <b-button
-        v-if="$auth.user && ($auth.user._id === giveaway.created_by)"
+        v-if="computeEnrollBtn"
         id='pick_winner'
         :disabled='winner !== null || isRouletteRolling'
         class='custom-btn pick font-weight-bolder mt-4 margin-auto' type="submit"
@@ -68,13 +68,23 @@ export default {
     }
   },
 
+  computed: {
+    computeEnrollBtn() {
+      // if user is the one who created
+      // if there were no user extracted
+      return this.$auth.user && (this.$auth.user._id === this.giveaway.created_by) && !this.giveaway.winner
+    }
+  },
+
   async mounted() {
     this.loadingRoulette = true
     await this.initCanvasSockets()
     // event listeners
     window.addEventListener('resize', _.debounce(() => {
-      this.emitReady()
-      this.initCanvas()
+      if (!this.winner) {
+        this.emitReady()
+        this.initCanvas()
+      }
     }, 200))
   },
 
@@ -195,7 +205,7 @@ export default {
       }
 
       // ========================
-      if (this.$auth.user && (this.$auth.user._id === this.giveaway.created_by)) {
+      if (this.computeEnrollBtn) {
         btn.addEventListener("click", () => {
           this.isRouletteRolling = true
           this.socket.emit('startSpin', this.generatedId, canvas.width)

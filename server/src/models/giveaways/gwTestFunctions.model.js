@@ -26,7 +26,7 @@ async function createTestGiveaway(req, res) {
     const newGiveaway = await new Giveaway({
       available: 'public',
       description: randomName,
-      duration: 0.50,
+      duration: 12,
       end_date,
       giveaway_name: randomName,
       generatedId: nanoid(8),
