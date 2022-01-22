@@ -8,7 +8,7 @@ const { PAGE_SIZE } = require('../../config')
 
 async function createTestGiveaway(req, res) {
   try {
-    let totalSeconds = 0.50 * 3600;
+    let totalSeconds = 12 * 3600;
     const hours = Math.floor(totalSeconds / 3600);
     totalSeconds %= 3600;
     const minutes = Math.floor(totalSeconds / 60);
