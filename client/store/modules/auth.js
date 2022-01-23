@@ -27,7 +27,4 @@ export const actions = {
 }
 
 export const mutations = {
-  setAccessToken(state, token) {
-    state.access_token = token
-  }
 }

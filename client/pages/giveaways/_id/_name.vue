@@ -3,7 +3,7 @@
     <PageHeader :title="giveaway.giveaway_name" :bootstrap-icon="'gift-fill'">
       <!--  right col btns.    -->
       <b-button
-        v-if="$auth.user"
+        v-if="$auth.user && checkIfAdmin"
         class='custom-btn font-weight-bolder' type="submit"
         variant="primary"
         @click="handleResetRoulette"
@@ -130,10 +130,12 @@ import { computeTimeLeft } from '~/utils/generalUtils'
 import { showAlert } from '~/utils/showAlert'
 import Roulette from '~/components/giveawayPage/Roulette'
 import PageHeader from '~/components/_shared/PageHeader'
+import { generalMixins } from '~/mixins/generalMixins'
 
 export default {
   name: "GiveawayPage",
   components: { Roulette, PageHeader },
+  mixins: [generalMixins],
   layout: 'SplitLayout',
 
   data() {
