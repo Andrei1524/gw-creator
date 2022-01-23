@@ -54,6 +54,17 @@ export const actions = {
       showAlert(commit, err, 'warning')
     }
   },
+
+  async resetRoulette({ commit }, generatedId) {
+    try {
+      const response = await this.$axios.post('/giveaways/reset_roulette', {
+        generatedId
+      })
+      showAlert(commit, response.data, 'success')
+    } catch (err) {
+      showAlert(commit, err, 'warning')
+    }
+  },
 }
 
 export const mutations = {

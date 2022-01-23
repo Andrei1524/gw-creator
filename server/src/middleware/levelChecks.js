@@ -1,6 +1,6 @@
 const { userLevels } = require('../utils/userLevels')
 
-const checkIfOwner = (req, res, next) => {
+const checkIfAdmin = (req, res, next) => {
   if (req.user.level === userLevels.OWNER) {
     next()
   } else {
@@ -9,5 +9,5 @@ const checkIfOwner = (req, res, next) => {
 }
 
 module.exports = {
-  checkIfOwner
+  checkIfAdmin
 }

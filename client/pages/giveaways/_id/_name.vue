@@ -151,8 +151,7 @@ export default {
   },
 
   async fetch() {
-    this.giveaway = await this.getGiveaway(this.$route.params.id)
-    await this.handleGetEnrolledUsers()
+    await this.handleFetchGiveaway()
   },
 
   watch: {
@@ -170,7 +169,12 @@ export default {
       setComponentToShow: 'setComponentToShow'
     }),
 
-    ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers']),
+    ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers', 'resetRoulette']),
+
+    async handleFetchGiveaway() {
+      this.giveaway = await this.getGiveaway(this.$route.params.id)
+      await this.handleGetEnrolledUsers()
+    },
 
     async handleEnrollInGiveaway() {
       // check if user is logged in
@@ -219,7 +223,10 @@ export default {
     },
 
     handleResetRoulette() {
-      console.log('reset rlt')
+      this.resetRoulette(this.giveaway.generatedId)
+        .then(() => {
+          this.handleFetchGiveaway()
+        })
     }
   },
 }

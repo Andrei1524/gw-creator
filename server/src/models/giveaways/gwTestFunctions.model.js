@@ -69,6 +69,15 @@ async function generateUsers(nrOfNewUsers) {
   return generatedUsersIds
 }
 
+async function resetRoulette(generatedId) {
+  return Giveaway.findOneAndUpdate({ generatedId }, {
+    winner: null,
+    rouletteEnded: false,
+    isRouletteRolling: false
+  })
+}
+
 module.exports = {
   createTestGiveaway,
+  resetRoulette
 }

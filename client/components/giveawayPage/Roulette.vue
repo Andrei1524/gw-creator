@@ -3,7 +3,7 @@
     <b-spinner v-if='loadingRoulette' type="grow"></b-spinner>
 
     <div v-show="!loadingRoulette" class='roulette-wrapper'>
-      <div v-if='!winner' class='canvas'>
+      <div v-show='!winner' class='canvas'>
         <canvas id="c"></canvas>
       </div>
 
@@ -12,7 +12,7 @@
       </div>
 
       <b-button
-        v-if="computeEnrollBtn"
+        v-show="computeEnrollBtn"
         id='pick_winner'
         :disabled='winner !== null || isRouletteRolling'
         class='custom-btn pick font-weight-bolder mt-4 margin-auto' type="submit"
@@ -72,7 +72,13 @@ export default {
     computeEnrollBtn() {
       // if user is the one who created
       // if there were no user extracted
-      return this.$auth.user && (this.$auth.user._id === this.giveaway.created_by) && !this.giveaway.winner
+      return this.$auth.user && (this.$auth.user._id === this.giveaway.created_by) && !this.winner
+    }
+  },
+
+  watch: {
+    giveaway() {
+      this.resetRoulette()
     }
   },
 
@@ -99,6 +105,16 @@ export default {
   methods: {
     ...mapActions('modules/giveaways', ['getGiveawayEnrolledUsers']),
 
+    async resetRoulette() {
+      this.winner = null
+
+      if (!this.giveaway.rouletteEnded) {
+        await this.initCanvasSockets()
+      } else {
+        this.emitReady()
+      }
+    },
+
     initCanvasSockets() {
       // init socket
       if (!this.giveaway.rouletteEnded) {
@@ -116,6 +132,7 @@ export default {
           this.rects = randomWinnerStop
 
           if (randomWinnerStop) {
+            this.isRouletteRolling = true
             this.randomWinnerStop = randomWinnerStop
           }
           this.loadingRoulette = false
