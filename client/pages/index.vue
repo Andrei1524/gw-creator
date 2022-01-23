@@ -22,8 +22,6 @@ export default {
   },
   mounted() {
     this.setComponentToShow({
-      showPageHeader: false,
-      headerTitle: '',
       componentToShow: 'share-giveaway',
       isMarginLeftAuto: true,
       showRight: true

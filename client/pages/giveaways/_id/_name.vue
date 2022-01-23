@@ -1,5 +1,6 @@
 <template>
   <b-container v-if='giveaway' fluid class='mt-4'>
+    <PageHeader :title="giveaway.giveaway_name" :bootstrap-icon="'gift-fill'" />
     <div class='giveaway'>
       <b-row>
         <b-col cols='12' md='5'>
@@ -114,10 +115,11 @@ import { mapActions, mapMutations } from 'vuex'
 import { computeTimeLeft } from '~/utils/generalUtils'
 import { showAlert } from '~/utils/showAlert'
 import Roulette from '~/components/giveawayPage/Roulette'
+import PageHeader from '~/components/_shared/PageHeader'
 
 export default {
   name: "GiveawayPage",
-  components: { Roulette },
+  components: { Roulette, PageHeader },
   layout: 'SplitLayout',
 
   data() {
@@ -142,8 +144,6 @@ export default {
   watch: {
     giveaway() {
       this.setComponentToShow({
-        showPageHeader: true,
-        headerTitle: this.giveaway.giveaway_name,
         componentToShow: null,
         isMarginLeftAuto: false,
         showRight: false
