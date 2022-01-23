@@ -77,7 +77,6 @@ export default {
   },
 
   async mounted() {
-    this.loadingRoulette = true
     await this.initCanvasSockets()
     // event listeners
     window.addEventListener('resize', _.debounce(() => {
@@ -103,6 +102,7 @@ export default {
     initCanvasSockets() {
       // init socket
       if (!this.giveaway.rouletteEnded) {
+        this.loadingRoulette = true
         this.socket = this.$nuxtSocket({
           name: 'home',
           channel: '/giveaway',

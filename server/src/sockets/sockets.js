@@ -40,6 +40,7 @@ function listen(io) {
 
     socket.on('startSpin', async (generatedId, canvasWidth) => {
       // allow spin if user wasn't extracted yet
+      console.log(foundGiveaway.winner)
       if (!foundGiveaway.winner) {
         await spin(generatedId, canvasWidth)
       } else {
@@ -78,8 +79,8 @@ function listen(io) {
 
         if (spinTime >= spinTimeTotal) {
           await Giveaway.findOneAndUpdate({generatedId: generatedId}, {
-            winner: null, // TODO: remove this when done testing -> winner: winner
-            rouletteEnded: false, // set to 'true' after testing
+            winner: winner, // TODO: remove this when done testing -> winner: winner
+            rouletteEnded: true, // set to 'true' after testing
             isRouletteRolling: false
           })
 
