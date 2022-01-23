@@ -16,12 +16,7 @@ function listen(io) {
     let foundGiveaway = null
 
     socket.on('ready', async (generatedId, canvasWidth) => {
-      foundGiveaway = await Giveaway // TODO: refactor this + keep final state of the roullete
-        .findOne({ generatedId: generatedId })
-        .populate('enrolled_users')
-        .populate('winner')
-        .select(['-password', '-refreshToken', '-email'])
-        .lean().exec()
+      foundGiveaway = await queryGetGiveaway(generatedId)
 
       // canvas ready
       room = 'room_' + generatedId
@@ -40,7 +35,8 @@ function listen(io) {
 
     socket.on('startSpin', async (generatedId, canvasWidth) => {
       // allow spin if user wasn't extracted yet
-      console.log(foundGiveaway.winner)
+      foundGiveaway = await queryGetGiveaway(generatedId)
+
       if (!foundGiveaway.winner) {
         await spin(generatedId, canvasWidth)
       } else {
@@ -65,7 +61,7 @@ function listen(io) {
       // emit the new generated rects with the winner inside
       giveawayNameSpace.in(room).emit('newGeneratedRects', rects, updatedGiveaway.randomWinnerStop)
 
-      // rollWhell variables
+      // rollWheel variables
       let spinTime = 0
       let spinStart = winnerXPos
       let spinTimeTotal = 0;
@@ -179,11 +175,15 @@ function generateWheelRects(enrolledUsers, winner, rectWidth, gap) {
 }
 
 function gameLoop() {
-
 }
 
-function queryGetGiveaway() {
-
+async function queryGetGiveaway(generatedId) {
+  return await Giveaway
+    .findOne({ generatedId: generatedId })
+    .populate('enrolled_users')
+    .populate('winner')
+    .select(['-password', '-refreshToken', '-email'])
+    .lean().exec()
 }
 
 function easeOutQuart(t, b, c, d) {
