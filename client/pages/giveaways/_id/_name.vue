@@ -1,6 +1,20 @@
 <template>
   <b-container v-if='giveaway' fluid class='mt-4'>
-    <PageHeader :title="giveaway.giveaway_name" :bootstrap-icon="'gift-fill'" />
+    <PageHeader :title="giveaway.giveaway_name" :bootstrap-icon="'gift-fill'">
+      <!--  right col btns.    -->
+      <b-button
+        v-if="$auth.user"
+        class='custom-btn font-weight-bolder' type="submit"
+        variant="primary"
+        @click="handleResetRoulette"
+      >
+        <b-icon
+          icon="hdd"
+          aria-hidden="true"
+        ></b-icon>
+        reset roulette
+      </b-button>
+    </PageHeader>
     <div class='giveaway'>
       <b-row>
         <b-col cols='12' md='5'>
@@ -202,6 +216,10 @@ export default {
 
     handleComputeTimeLeft() {
       return computeTimeLeft(this.giveaway.end_date)
+    },
+
+    handleResetRoulette() {
+      console.log('reset rlt')
     }
   },
 }

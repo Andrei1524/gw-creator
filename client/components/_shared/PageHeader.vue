@@ -13,18 +13,7 @@
         </div>
 
         <div class='buttons'>
-          <b-button
-            v-if="$auth.user"
-            class='custom-btn font-weight-bolder' type="submit"
-            variant="primary"
-            @click="handleResetRoulette"
-          >
-            <b-icon
-              icon="hdd"
-              aria-hidden="true"
-            ></b-icon>
-            reset roulette
-          </b-button>
+          <slot></slot>
         </div>
       </div>
     </div>
@@ -53,9 +42,6 @@ export default {
   },
 
   methods: {
-    handleResetRoulette() {
-      console.log('reset rlt')
-    }
   }
 }
 </script>
