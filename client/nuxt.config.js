@@ -45,8 +45,19 @@ export default {
   modules: [
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    'nuxt-socket-io'
   ],
+
+  io: {
+    sockets: [ // Required
+      { // At least one entry is required
+        name: 'home',
+        url: process.env.BASE_URL,
+        default: true,
+      },
+    ]
+  },
 
   bootstrapVue: {
     // Install the `IconsPlugin` plugin (in addition to `BootstrapVue` plugin)

@@ -8,7 +8,7 @@ const { PAGE_SIZE } = require('../../config')
 
 async function createTestGiveaway(req, res) {
   try {
-    let totalSeconds = 0.50 * 3600;
+    let totalSeconds = 12 * 3600;
     const hours = Math.floor(totalSeconds / 3600);
     totalSeconds %= 3600;
     const minutes = Math.floor(totalSeconds / 60);
@@ -19,13 +19,14 @@ async function createTestGiveaway(req, res) {
     })
 
     // create test giveaway
-    let randomName = `test: ${Math.floor(Math.random() * 25)}`
-    let listOfGeneratedUsers = await generateUsers(25)
+    let nrOfUsers = 100
+    let randomName = `test: ${Math.floor(Math.random() * nrOfUsers)}`
+    let listOfGeneratedUsers = await generateUsers(nrOfUsers)
 
     const newGiveaway = await new Giveaway({
       available: 'public',
       description: randomName,
-      duration: 0.50,
+      duration: 12,
       end_date,
       giveaway_name: randomName,
       generatedId: nanoid(8),
@@ -33,6 +34,9 @@ async function createTestGiveaway(req, res) {
       nr_of_participants: 50,
       nr_of_winners: 1,
       pick_winner_method: 'automatic',
+      isRouletteRolling: false,
+      rouletteEnded: false,
+      winner: null,
       created_by: req.user._id,
       status: giveawayStatuses.OPEN,
       enrolled_users: listOfGeneratedUsers
@@ -65,6 +69,15 @@ async function generateUsers(nrOfNewUsers) {
   return generatedUsersIds
 }
 
+async function resetRoulette(generatedId) {
+  return Giveaway.findOneAndUpdate({ generatedId }, {
+    winner: null,
+    rouletteEnded: false,
+    isRouletteRolling: false
+  })
+}
+
 module.exports = {
   createTestGiveaway,
+  resetRoulette
 }

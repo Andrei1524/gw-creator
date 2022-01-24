@@ -1,13 +1,13 @@
 const { userLevels } = require('../utils/userLevels')
 
-const checkIfOwner = (req, res, next) => {
+const checkIfAdmin = (req, res, next) => {
   if (req.user.level === userLevels.OWNER) {
     next()
   } else {
-    return res.sendStatus(403)
+    return res.status(403).json({error: "not an admin"})
   }
 }
 
 module.exports = {
-  checkIfOwner
+  checkIfAdmin
 }

@@ -237,8 +237,6 @@ export default {
   mounted() {
     // TODO: refactor method into utils maybe
     this.setComponentToShow({
-      showPageHeader: true,
-      headerTitle: 'Create giveaway',
       componentToShow: 'share-giveaway',
       isMarginLeftAuto: false,
       showRight: true

@@ -10,7 +10,7 @@
     </div>
 
     <div class='participants position-absolute d-flex'>
-      <span class='font-size-12 d-block mr-1 font-weight-bolder'>20/{{ giveaway.nr_of_participants }} </span>
+      <span class='font-size-12 d-block mr-1 font-weight-bolder'>{{ giveaway.enrolled_users.length }}/{{ giveaway.nr_of_participants }} </span>
       <b-icon
         v-if="giveaway.status === 'closed'"
         icon="lock-fill"

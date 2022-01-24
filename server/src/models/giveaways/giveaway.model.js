@@ -28,6 +28,9 @@ async function createGiveaway(req, res, giveaway) {
       nr_of_participants: giveaway.nr_of_participants,
       nr_of_winners: giveaway.nr_of_winners,
       pick_winner_method: giveaway.pick_winner_method,
+      isRouletteRolling: false,
+      rouletteEnded: false,
+      winner: null,
       created_by: req.user._id,
       status: giveawayStatuses.OPEN
     })
@@ -58,7 +61,7 @@ async function getGiveaways(req, res, page) {
 }
 
 async function getGiveaway(req, res, generatedId) {
-  return await Giveaway.findOne({generatedId}).lean().exec()
+  return await Giveaway.findOne({generatedId}).populate('winner').lean().exec()
 }
 
 async function enrollUserInGiveaway(req, res, generatedId) {
@@ -79,23 +82,35 @@ async function enrollUserInGiveaway(req, res, generatedId) {
 }
 
 async function getGiveawayEnrolledUsers(req, res, generatedId, page) {
-  if (!page) throw  Error('page is required') // TODO: refactor this repetition on pagination
   if (page <= 0) page = 1
 
   const skip = (page - 1) * PAGE_SIZE
 
-  const foundGiveaway = await Giveaway.findOne({generatedId})
-    .populate([{
-      path: 'enrolled_users',
-      select: ['-password', '-refreshToken', '-email'],
-      model: 'User',
-      options: {
-        skip: skip,
-        limit : PAGE_SIZE
-      },
-    }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
-    .lean()
-    .exec()
+  let foundGiveaway
+
+  if (page) {
+    foundGiveaway = await Giveaway.findOne({generatedId})
+      .populate([{
+        path: 'enrolled_users',
+        select: ['-password', '-refreshToken', '-email'],
+        model: 'User',
+        options: {
+          skip: skip,
+          limit : PAGE_SIZE
+        },
+      }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
+      .lean()
+      .exec()
+  } else {
+    foundGiveaway = await Giveaway.findOne({generatedId})
+      .populate([{
+        path: 'enrolled_users',
+        select: ['-password', '-refreshToken', '-email'],
+        model: 'User',
+      }]) // 'enrolled_users', ['-password', '-refreshToken', '-email']
+      .lean()
+      .exec()
+  }
   return foundGiveaway.enrolled_users
 }
 

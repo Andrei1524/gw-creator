@@ -1,5 +1,20 @@
 <template>
   <b-container v-if='giveaway' fluid class='mt-4'>
+    <PageHeader :title="giveaway.giveaway_name" :bootstrap-icon="'gift-fill'">
+      <!--  right col btns.    -->
+      <b-button
+        v-if="$auth.user && checkIfAdmin"
+        class='custom-btn font-weight-bolder' type="submit"
+        variant="primary"
+        @click="handleResetRoulette"
+      >
+        <b-icon
+          icon="hdd"
+          aria-hidden="true"
+        ></b-icon>
+        reset roulette
+      </b-button>
+    </PageHeader>
     <div class='giveaway'>
       <b-row>
         <b-col cols='12' md='5'>
@@ -102,7 +117,7 @@
         </b-col>
 
         <b-col cols='12' md='7'>
-          <div class='giveaway-roulette'>roulette</div>
+          <Roulette :giveaway='giveaway' :generated-id='giveaway.generatedId' :enrolled-users='giveaway.enrolled_users' />
         </b-col>
       </b-row>
     </div>
@@ -113,9 +128,14 @@
 import { mapActions, mapMutations } from 'vuex'
 import { computeTimeLeft } from '~/utils/generalUtils'
 import { showAlert } from '~/utils/showAlert'
+import Roulette from '~/components/giveawayPage/Roulette'
+import PageHeader from '~/components/_shared/PageHeader'
+import { generalMixins } from '~/mixins/generalMixins'
 
 export default {
   name: "GiveawayPage",
+  components: { Roulette, PageHeader },
+  mixins: [generalMixins],
   layout: 'SplitLayout',
 
   data() {
@@ -133,15 +153,12 @@ export default {
   },
 
   async fetch() {
-    this.giveaway = await this.getGiveaway(this.$route.params.id)
-    await this.handleGetEnrolledUsers()
+    await this.handleFetchGiveaway()
   },
 
   watch: {
     giveaway() {
       this.setComponentToShow({
-        showPageHeader: true,
-        headerTitle: this.giveaway.giveaway_name,
         componentToShow: null,
         isMarginLeftAuto: false,
         showRight: false
@@ -154,7 +171,12 @@ export default {
       setComponentToShow: 'setComponentToShow'
     }),
 
-    ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers']),
+    ...mapActions('modules/giveaways', ['getGiveaway', 'enrollInGiveaway', 'getGiveawayEnrolledUsers', 'resetRoulette']),
+
+    async handleFetchGiveaway() {
+      this.giveaway = await this.getGiveaway(this.$route.params.id)
+      await this.handleGetEnrolledUsers()
+    },
 
     async handleEnrollInGiveaway() {
       // check if user is logged in
@@ -200,6 +222,13 @@ export default {
 
     handleComputeTimeLeft() {
       return computeTimeLeft(this.giveaway.end_date)
+    },
+
+    handleResetRoulette() {
+      this.resetRoulette(this.giveaway.generatedId)
+        .then(() => {
+          this.handleFetchGiveaway()
+        })
     }
   },
 }
