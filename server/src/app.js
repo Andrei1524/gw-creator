@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(express.json()) // if we use json data
-// server public react code
+// server public nuxt code
 app.use(express.static(path.join(__dirname, '..', 'dist')))
 
 app.use('/v1', api)
